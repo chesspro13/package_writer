@@ -1,0 +1,23 @@
+.nav_bar {
+    flex-grow: 1;
+    list-style-type: none;
+}
+
+.dark_mode_button {
+    height: 30px;
+    margin: 15px;
+}
+
+#header {
+    margin-left: 15px;
+}
+
+.nav_filler {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style-type: none;
+    background-color: black;
+    height: 8vh;
+    flex-grow: 1;
+}

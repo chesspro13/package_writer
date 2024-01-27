@@ -1,0 +1,29 @@
+.editor {
+    
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+    width: 80vw;
+    height: 45vh;
+    /* overflow: hidden; */
+}
+
+
+.input {
+    padding: 0;
+    border: 1px solid black;
+    width: 45%;
+    height: inherit;
+}
+
+.output {
+    padding: 0;
+    width: 45%;
+    height: inherit;
+}
+
+.char-data {
+    width: 10%;
+    list-style: none;
+}
