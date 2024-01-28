@@ -1,29 +1,36 @@
 .editor {
-    
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 10px;
-    width: 80vw;
-    height: 45vh;
-    /* overflow: hidden; */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+  width: 80vw;
+  height: 45vh;
 }
 
+.editorBox {
+  padding: 0;
+  width: 45vw;
+  height: inherit;
+}
 
 .input {
-    padding: 0;
-    border: 1px solid black;
-    width: 45%;
-    height: inherit;
 }
 
 .output {
-    padding: 0;
-    width: 45%;
-    height: inherit;
+  word-wrap: break-word;
+  overflow-y: auto;
+  padding: 5px;
 }
 
 .char-data {
-    width: 10%;
-    list-style: none;
+  width: 10%;
+  list-style: none;
+}
+
+.red {
+  color: red;
+}
+
+.black {
+  color: lightgray;
 }
