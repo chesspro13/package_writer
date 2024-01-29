@@ -3,6 +3,11 @@ import { useState } from "react";
 
 interface setterProps {
   output_setter: React.Dispatch<React.SetStateAction<string>>;
+  characterLimit: number;
+}
+
+function doNothing() {
+  return <div></div>;
 }
 
 function getTrueSize(str: string) {
@@ -16,7 +21,6 @@ function getTrueSize(str: string) {
 
 function EditorBody(props: setterProps) {
   const [packageText, setPackageText] = useState("");
-  const maxCharacters = 350;
   let charactersUsed = 0;
 
   function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -30,15 +34,22 @@ function EditorBody(props: setterProps) {
     charactersUsed = getTrueSize(text);
 
     for (var i = 0; i < text.length; i++)
-      if (i < maxCharacters) revision_text_a = revision_text_a.concat(text[i]);
+      if (i < props.characterLimit)
+        revision_text_a = revision_text_a.concat(text[i]);
       else revision_text_b = revision_text_b.concat(text[i]);
 
     props.output_setter(text);
 
     return (
       <>
-        <span className="black">{revision_text_a}</span>
-        <span className="red">{revision_text_b}</span>
+        {props.characterLimit == -1 ? (
+          <span className="black">{text}</span>
+        ) : (
+          <>
+            <span className="black">{revision_text_a}</span>
+            <span className="red">{revision_text_b}</span>{" "}
+          </>
+        )}
       </>
     );
   }
@@ -53,11 +64,14 @@ function EditorBody(props: setterProps) {
       />
 
       <div className="output editorBox">{createMarkupText(packageText)}</div>
-
-      <ul className="char-data">
-        <li>Used: {charactersUsed}</li>
-        <li>Avaliable: {maxCharacters - charactersUsed}</li>
-      </ul>
+      {props.characterLimit == -1 ? (
+        doNothing()
+      ) : (
+        <ul className="char-data">
+          <li>Used: {charactersUsed}</li>
+          <li>Avaliable: {props.characterLimit - charactersUsed}</li>
+        </ul>
+      )}
     </div>
   );
 }
