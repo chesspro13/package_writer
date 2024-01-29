@@ -1,7 +1,5 @@
 import "./revision.css";
 
-let charactersUsed = 0;
-
 interface outputProp {
   revisions: string[];
   characterLimit: number;
@@ -14,7 +12,7 @@ function RevisionElement(props: outputProp) {
     let revision_text_a = "";
     let revision_text_b = "";
 
-    charactersUsed = getTrueSize(text);
+    // charactersUsed = getTrueSize(text);
 
     for (var i = 0; i < text.length; i++)
       if (i < props.characterLimit)

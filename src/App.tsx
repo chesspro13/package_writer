@@ -5,11 +5,6 @@ import EditorBody from "./Editor/editor-body";
 import RevisionElement from "./RevisionControl/RevisionElement";
 import NavigationBar from "./NavigationBar/nav";
 
-interface appInterface {
-  characterLimit: number;
-  setCharacterLimit: React.Dispatch<React.SetStateAction<number>>;
-}
-
 function App() {
   const [revisions, setRevisions] = useState([""]);
   const [output, setOutput] = useState("");
