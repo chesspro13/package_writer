@@ -8,7 +8,7 @@ function About() {
     <>
       <NavigationBar setCharacterLimit={doA} showCharacters={false} />
       <div className="explination">
-        <h1>What is this?</h1>
+        <h1>{a ? "What is this?" : "What is this?"}</h1>
         <p>
           I have found that when making packages or EPB's the best way for me to
           do it is to be able to see all of my previous revisions so I have

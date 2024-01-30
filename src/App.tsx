@@ -1,9 +1,4 @@
 import "./App.css";
-import { useState } from "react";
-import RevisionButtons from "./RevisionControl/revision-buttons";
-import EditorBody from "./Editor/editor-body";
-import RevisionElement from "./RevisionControl/RevisionElement";
-import NavigationBar from "./NavigationBar/nav";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainEditor from "./pages/MainEditor";
