@@ -23,9 +23,9 @@ function characterSelector(props: navInterface) {
         <option value={700}>700</option>
         <option value={-1}>No Limit</option>
       </select>
-      <Link to="/about">
+      <a href="/about">
         <Button className="about_button">About</Button>
-      </Link>
+      </a>
     </div>
   );
 }
