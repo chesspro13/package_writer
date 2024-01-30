@@ -12,6 +12,11 @@
   width: 50px;
 }
 
+#logo {
+  all: unset;
+  cursor: pointer;
+}
+
 #header {
   margin-left: 15px;
 }
@@ -20,6 +25,14 @@
   display: flex;
   justify-content: space-between;
   border: 1px solid burlywood;
+}
+
+.nav_button_group {
+  display: flex;
+}
+
+.about_button {
+  margin: 10px;
 }
 
 .nav_filler {

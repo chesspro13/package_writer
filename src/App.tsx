@@ -5,30 +5,21 @@ import EditorBody from "./Editor/editor-body";
 import RevisionElement from "./RevisionControl/RevisionElement";
 import NavigationBar from "./NavigationBar/nav";
 
-function App() {
-  const [revisions, setRevisions] = useState([""]);
-  const [output, setOutput] = useState("");
-  const [characterLimit, setCharacterLimit] = useState(350);
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MainEditor from "./pages/MainEditor";
+import About from "./pages/About";
 
+function App() {
   return (
-    <>
-      <NavigationBar setCharacterLimit={setCharacterLimit} />
-      <div className="body">
-        <EditorBody output_setter={setOutput} characterLimit={characterLimit} />
-        <RevisionButtons
-          revisions={revisions}
-          updateRevisions={setRevisions}
-          output={output}
-        />
-        <RevisionElement
-          revisions={revisions}
-          characterLimit={characterLimit}
-        />
-        <footer>
-          <div>Version 0.1.3</div>
-        </footer>
-      </div>
-    </>
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<MainEditor />} />
+          <Route path="/home" element={<MainEditor />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
