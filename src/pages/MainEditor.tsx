@@ -4,6 +4,7 @@ import RevisionButtons from "../RevisionControl/revision-buttons";
 import EditorBody from "../Editor/editor-body";
 import RevisionElement from "../RevisionControl/RevisionElement";
 import NavigationBar from "../NavigationBar/nav";
+import Footer from "../Components/footer";
 
 function MainEditor() {
   const [revisions, setRevisions] = useState([""]);
@@ -27,9 +28,7 @@ function MainEditor() {
           revisions={revisions}
           characterLimit={characterLimit}
         />
-        <footer>
-          <div>Version 0.1.3</div>
-        </footer>
+        <Footer />
       </div>
     </>
   );

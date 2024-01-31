@@ -2,6 +2,7 @@ import Navbar from "react-bootstrap/Navbar";
 import "./NavigationBar.css";
 // import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 // import { Button } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 interface navInterface {
   setCharacterLimit: React.Dispatch<React.SetStateAction<number>>;
   showCharacters: boolean;
@@ -22,9 +23,6 @@ function characterSelector(props: navInterface) {
         <option value={700}>700</option>
         <option value={-1}>No Limit</option>
       </select>
-      {/* <a href="/about">
-        <Button className="about_button">About</Button>
-      </a> */}
     </div>
   );
 }
@@ -38,9 +36,12 @@ function NavigationBar(props: navInterface) {
     <div className="nav_filler">
       <Navbar sticky="top" id="header">
         <h1>
-          <a href="/" id="logo">
+          <NavLink to="/" className={"navigation_button"}>
             Package Writer{" "}
-          </a>
+          </NavLink>
+          <NavLink to="about" className={"sub-important navigation_button"}>
+            About
+          </NavLink>
         </h1>
       </Navbar>
       <div className="nav_button_group">

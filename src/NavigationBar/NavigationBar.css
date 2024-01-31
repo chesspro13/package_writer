@@ -12,9 +12,13 @@
   width: 50px;
 }
 
-#logo {
+.navigation_button {
   all: unset;
   cursor: pointer;
+}
+
+.sub-important {
+  font-size: 1.25rem;
 }
 
 #header {

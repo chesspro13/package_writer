@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NavigationBar from "../NavigationBar/nav";
 import "./about.css";
+import Footer from "../Components/footer";
 
 function About() {
   const [a, doA] = useState(0);
@@ -25,9 +26,7 @@ function About() {
           <a href="https://www.buymeacoffee.com/bmauldin">coffee.</a>
         </p>
       </div>
-      <footer>
-        <div>Version 0.1.3</div>
-      </footer>
+      <Footer />
     </>
   );
 }
