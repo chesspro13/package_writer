@@ -1,10 +1,9 @@
-import "../App.css";
 import { useState } from "react";
 import RevisionButtons from "../RevisionControl/revision-buttons";
 import EditorBody from "../Editor/editor-body";
 import RevisionElement from "../RevisionControl/RevisionElement";
-import NavigationBar from "../NavigationBar/nav";
-import Footer from "../Components/footer";
+import NavigationBar from "../Components/Header/NavigationBar";
+import Footer from "../Components/Footer/footer";
 
 function MainEditor() {
   const [revisions, setRevisions] = useState([""]);

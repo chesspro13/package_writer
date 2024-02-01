@@ -1,8 +1,7 @@
 import Navbar from "react-bootstrap/Navbar";
 import "./NavigationBar.css";
-// import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-// import { Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+
 interface navInterface {
   setCharacterLimit: React.Dispatch<React.SetStateAction<number>>;
   showCharacters: boolean;

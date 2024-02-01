@@ -1,7 +1,7 @@
 import { useState } from "react";
-import NavigationBar from "../NavigationBar/nav";
+import NavigationBar from "../Components/Header/NavigationBar";
 import "./about.css";
-import Footer from "../Components/footer";
+import Footer from "../Components/Footer/footer";
 
 function About() {
   const [a, doA] = useState(0);
