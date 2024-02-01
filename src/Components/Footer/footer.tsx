@@ -1,9 +1,10 @@
 // import Coffee from "../Coffee/coffee";
+import "./footer.css";
 
 function Footer() {
   return (
     <footer>
-      <div>Version 0.1.3</div>
+      Version 0.1.3
       {/* <Coffee /> */}
     </footer>
   );

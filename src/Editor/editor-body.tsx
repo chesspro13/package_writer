@@ -63,7 +63,9 @@ function EditorBody(props: setterProps) {
         onChange={formatOutput}
       />
 
-      <div className="output editorBox">{createMarkupText(packageText)}</div>
+      <div className="output editorBox">
+        {packageText.length > 0 ? createMarkupText(packageText) : "Output..."}
+      </div>
       {props.characterLimit == -1 ? (
         doNothing()
       ) : (

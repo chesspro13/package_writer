@@ -20,7 +20,8 @@ footer {
 .output {
   word-wrap: break-word;
   overflow-y: auto;
-  padding: 5px;
+  padding: 1px;
+  border: 1px solid gray;
 }
 
 .char-data {

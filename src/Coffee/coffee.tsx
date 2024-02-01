@@ -1,14 +1,12 @@
-import { Button } from "react-bootstrap";
+import CoffeeLogo from "../assets/Coffee/coffeeQR_DarkMode.png";
+import "./coffee.css";
 
 function Coffee() {
   return (
-    <Button target="_blank" href="https://www.buymeacoffee.com/agney">
-      <img
-        src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg"
-        alt="Buy me a coffee"
-      />
-      <p>Buy me a coffee</p>
-    </Button>
+    <>
+      <img src={CoffeeLogo} alt="Buy me a coffee" />
+      <p>Consider buying me a coffee</p>
+    </>
   );
 }
 

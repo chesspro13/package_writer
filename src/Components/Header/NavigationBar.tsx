@@ -38,10 +38,13 @@ function NavigationBar(props: navInterface) {
           <NavLink to="/" className={"navigation_button"}>
             Package Writer{" "}
           </NavLink>
-          <NavLink to="about" className={"sub-important navigation_button"}>
-            About
-          </NavLink>
         </h1>
+        <NavLink to="/about" className={"sub-important navigation_button"}>
+          About
+        </NavLink>
+        <NavLink to="/support" className={"sub-important navigation_button"}>
+          Support
+        </NavLink>
       </Navbar>
       <div className="nav_button_group">
         {props.showCharacters ? characterSelector(props) : doNothing()}
