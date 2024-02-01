@@ -1,0 +1,14 @@
+img {
+  height: 256px;
+  width: 256px;
+  margin-bottom: 1px;
+  box-shadow: none;
+  border: none;
+  vertical-align: middle;
+}
+
+.span {
+  margin-left: 15px;
+  font-size: 2rem;
+  vertical-align: middle;
+}

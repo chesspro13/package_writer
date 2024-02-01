@@ -7,19 +7,21 @@
   height: 45vh;
 }
 
+footer {
+  display: flex;
+}
+
 .editorBox {
   padding: 0;
   width: 45vw;
   height: inherit;
 }
 
-.input {
-}
-
 .output {
   word-wrap: break-word;
   overflow-y: auto;
-  padding: 5px;
+  padding: 1px;
+  border: 1px solid gray;
 }
 
 .char-data {

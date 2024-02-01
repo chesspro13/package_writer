@@ -6,8 +6,6 @@ interface outputProp {
 }
 
 function RevisionElement(props: outputProp) {
-  console.log(props.revisions);
-
   function createMarkupText(text: string) {
     let revision_text_a = "";
     let revision_text_b = "";

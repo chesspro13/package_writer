@@ -12,14 +12,32 @@
   width: 50px;
 }
 
+.navigation_button {
+  all: unset;
+  cursor: pointer;
+}
+
+.sub-important {
+  font-size: 1.25rem;
+}
+
 #header {
   margin-left: 15px;
+  gap: 2em 2em;
 }
 
 #navbar {
   display: flex;
   justify-content: space-between;
   border: 1px solid burlywood;
+}
+
+.nav_button_group {
+  display: flex;
+}
+
+.about_button {
+  margin: 10px;
 }
 
 .nav_filler {
