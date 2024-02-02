@@ -5,14 +5,14 @@ import Footer from "../../Components/Footer/footer";
 import Coffee from "../../Coffee/coffee";
 
 function Support() {
-  const [a, doA] = useState(0);
+  const [a, doA] = useState(false);
 
   // Typescript complains if "a" isn't reffrenced anywhere.
   a;
 
   return (
     <>
-      <NavigationBar setCharacterLimit={doA} showCharacters={false} />
+      <NavigationBar toggleMenu={doA} menuOpen={a} />
       <div className="explination">
         <div className="text">
           <h1>Hi, I'm Brandon, the developer behind PackageWriter.com.</h1>

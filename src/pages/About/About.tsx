@@ -4,10 +4,10 @@ import "./about.css";
 import Footer from "../../Components/Footer/footer";
 
 function About() {
-  const [a, doA] = useState(0);
+  const [a, doA] = useState(false);
   return (
     <>
-      <NavigationBar setCharacterLimit={doA} showCharacters={false} />
+      <NavigationBar toggleMenu={doA} menuOpen={a} />
       <div className="explination">
         <h2>{a ? "What is this?" : "What is this?"}</h2>
         <p>This tool was made to streamline writing packages and EPBs! </p>
