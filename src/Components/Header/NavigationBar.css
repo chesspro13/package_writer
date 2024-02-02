@@ -8,6 +8,10 @@
   margin: 15px;
 }
 
+img {
+  padding-right: 20px;
+}
+
 .numInput {
   width: 50px;
 }
@@ -29,11 +33,14 @@
 #navbar {
   display: flex;
   justify-content: space-between;
-  border: 1px solid burlywood;
+  /* border: 1px solid burlywood; */
 }
 
 .nav_button_group {
   display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
 }
 
 .about_button {

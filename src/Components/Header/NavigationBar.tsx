@@ -1,36 +1,18 @@
 import Navbar from "react-bootstrap/Navbar";
 import "./NavigationBar.css";
 import { NavLink } from "react-router-dom";
+import hamburger_menu from "../../assets/icons/menu_icon.png";
 
 interface navInterface {
-  setCharacterLimit: React.Dispatch<React.SetStateAction<number>>;
-  showCharacters: boolean;
-}
-
-function characterSelector(props: navInterface) {
-  return (
-    <div>
-      Max Characters:
-      <select
-        defaultValue={350}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          props.setCharacterLimit(parseInt(e.target.value))
-        }
-      >
-        <option value={250}>250</option>
-        <option value={350}>350</option>
-        <option value={700}>700</option>
-        <option value={-1}>No Limit</option>
-      </select>
-    </div>
-  );
-}
-
-function doNothing() {
-  return <p></p>;
+  toggleMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  menuOpen: boolean;
 }
 
 function NavigationBar(props: navInterface) {
+  function toggleMenu() {
+    props.toggleMenu(!props.menuOpen);
+  }
+
   return (
     <div className="nav_filler">
       <Navbar sticky="top" id="header">
@@ -46,9 +28,16 @@ function NavigationBar(props: navInterface) {
           Support
         </NavLink>
       </Navbar>
-      <div className="nav_button_group">
+      {/* <div className="nav_button_group">
         {props.showCharacters ? characterSelector(props) : doNothing()}
-      </div>
+        {/* <Menu /> * /}
+      </div> */}
+      <img
+        src={hamburger_menu}
+        alt="Menu"
+        className="hamburger_menu"
+        onClick={toggleMenu}
+      />
     </div>
   );
 }

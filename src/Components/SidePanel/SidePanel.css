@@ -1,0 +1,16 @@
+.hamburger_menu {
+  width: 32px;
+  height: 32px;
+}
+
+.side_pane {
+  background-color: black;
+  width: 300px;
+  height: 92vh;
+  min-width: 250px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
