@@ -1,14 +1,15 @@
 import "./NoteToggle.css";
+import ToggleSwitch from "./ToggleSwitch";
 
 interface notesToggleInterface {
-  setToggleMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  getToggleMenu: boolean;
+  setNotesMenuState: React.Dispatch<React.SetStateAction<boolean>>;
+  notesMenuState: boolean;
   setNoteCounter: React.Dispatch<React.SetStateAction<number>>;
   noteCount: number;
 }
 function NotesToggle(props: notesToggleInterface) {
   function toggleNotes() {
-    props.setToggleMenu(!props.getToggleMenu);
+    props.setNotesMenuState(!props.notesMenuState);
   }
 
   function updateCount(
@@ -22,7 +23,7 @@ function NotesToggle(props: notesToggleInterface) {
   function getNoteCounter() {
     return (
       <>
-        <label onClick={toggleNotes}>Number of Notes:</label>
+        <label onClick={toggleNotes}>Note Count:</label>
         <input
           type="number"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -35,11 +36,12 @@ function NotesToggle(props: notesToggleInterface) {
   }
   return (
     <div>
-      {props.getToggleMenu ? (
-        getNoteCounter()
-      ) : (
-        <div onClick={toggleNotes}>Enable Notes</div>
-      )}
+      <ToggleSwitch
+        label="Notes"
+        setState={props.setNotesMenuState}
+        state={props.notesMenuState}
+      />
+      {props.notesMenuState ? getNoteCounter() : <></>}
     </div>
   );
 }

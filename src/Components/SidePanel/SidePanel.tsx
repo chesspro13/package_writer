@@ -15,8 +15,8 @@ function SidePanel(props: characterSelector) {
     <div className="side_pane">
       <CharacterLimitSelector setCharacterLimit={props.setCharacterLimit} />
       <NotesToggle
-        getToggleMenu={props.getToggleMenu}
-        setToggleMenu={props.setToggleMenu}
+        notesMenuState={props.getToggleMenu}
+        setNotesMenuState={props.setToggleMenu}
         setNoteCounter={props.setNoteCounter}
         noteCount={props.noteCount}
       />

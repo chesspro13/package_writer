@@ -15,5 +15,7 @@
   float: right;
   position: fixed;
   right: 0;
+  justify-content: start;
+  gap: 15px;
   /* padding: 10px; */
 }
