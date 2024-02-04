@@ -8,6 +8,8 @@ interface MenuData {
   getToggleMenu: boolean;
   setNoteCounter: React.Dispatch<React.SetStateAction<number>>;
   noteCount: number;
+  setEditorType: React.Dispatch<React.SetStateAction<boolean>>;
+  editorType: boolean;
 }
 
 function doNothing() {
@@ -25,6 +27,8 @@ function Menu(props: MenuData) {
             getToggleMenu={props.getToggleMenu}
             setNoteCounter={props.setNoteCounter}
             noteCount={props.noteCount}
+            editorType={props.editorType}
+            setEditorType={props.setEditorType}
           />
         </>
       ) : (

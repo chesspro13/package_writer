@@ -1,6 +1,7 @@
 import "./SidePanel.css";
 import CharacterLimitSelector from "../CharacterLimitSelector";
 import NotesToggle from "../NotesToggleInteration";
+import EditorToggle from "../EditorToggle";
 
 interface characterSelector {
   setCharacterLimit: React.Dispatch<React.SetStateAction<number>>;
@@ -8,6 +9,8 @@ interface characterSelector {
   getToggleMenu: boolean;
   setNoteCounter: React.Dispatch<React.SetStateAction<number>>;
   noteCount: number;
+  setEditorType: React.Dispatch<React.SetStateAction<boolean>>;
+  editorType: boolean;
 }
 
 function SidePanel(props: characterSelector) {
@@ -19,6 +22,10 @@ function SidePanel(props: characterSelector) {
         setNotesMenuState={props.setToggleMenu}
         setNoteCounter={props.setNoteCounter}
         noteCount={props.noteCount}
+      />
+      <EditorToggle
+        editorType={props.editorType}
+        setEditorType={props.setEditorType}
       />
     </div>
   );

@@ -15,16 +15,21 @@ function MainEditor() {
   const [menuToggle, setMenuToggle] = useState(false);
   const [notesToggle, setNotesToggle] = useState(false);
   const [noteCounter, setNoteCounter] = useState(0);
+  const [editorType, setEditorType] = useState(false);
 
   return (
     <>
       <NavigationBar toggleMenu={setMenuToggle} menuOpen={menuToggle} />
       <div className="page">
         <div className="body">
-          <EditorBody
-            output_setter={setOutput}
-            characterLimit={characterLimit}
-          />
+          {editorType ? (
+            <EditorBody
+              output_setter={setOutput}
+              characterLimit={characterLimit}
+            />
+          ) : (
+            <></>
+          )}
           <RevisionButtons
             revisions={revisions}
             updateRevisions={setRevisions}
@@ -43,6 +48,8 @@ function MainEditor() {
           getToggleMenu={notesToggle}
           setNoteCounter={setNoteCounter}
           noteCount={noteCounter}
+          editorType={editorType}
+          setEditorType={setEditorType}
         />
       </div>
       <Footer />
