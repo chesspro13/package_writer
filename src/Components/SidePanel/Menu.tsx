@@ -10,25 +10,22 @@ interface MenuData {
   noteCount: number;
 }
 
-function doNothing() {
-  return <div />;
-}
-
 function Menu(props: MenuData) {
+  function doNothing() {
+    return <div />;
+  }
   return (
     <>
       {props.menuVisable ? (
-        <>
-          <SidePanel
-            setCharacterLimit={props.setCharacterLimit}
-            setToggleMenu={props.setToggleMenu}
-            getToggleMenu={props.getToggleMenu}
-            setNoteCounter={props.setNoteCounter}
-            noteCount={props.noteCount}
-          />
-        </>
+        <SidePanel
+          setCharacterLimit={props.setCharacterLimit}
+          setToggleMenu={props.setToggleMenu}
+          getToggleMenu={props.getToggleMenu}
+          setNoteCounter={props.setNoteCounter}
+          noteCount={props.noteCount}
+        />
       ) : (
-        doNothing
+        doNothing()
       )}
     </>
   );

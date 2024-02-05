@@ -54,6 +54,83 @@ function EditorBody(props: setterProps) {
     );
   }
 
+  // Stuck here, not able to get any output.
+  function createSpanMarkupText(text: string) {
+    charactersUsed = getTrueSize(text);
+
+    let input = text.split(" ");
+    let output: React.JSX.Element[] = [];
+    let charSoFar = 0;
+
+    input.forEach((i) => {
+      if (i == "" || " ") {
+        return;
+      }
+      if (charSoFar + i.length < props.characterLimit) {
+        output.push(
+          <p className="word">
+            <span> {i} </span>
+          </p>
+        );
+      } else if (charSoFar > props.characterLimit) {
+        output.push(
+          <p className="word">
+            {" "}
+            <span className="red">{i} </span>
+          </p>
+        );
+      } else {
+        let blackString = "";
+        let redString = "";
+        for (let j = 1; j < i.length + 1; j++) {
+          if (charSoFar + j < props.characterLimit) blackString += i[j - 1];
+          else redString += i[j - 1];
+        }
+
+        output.push(
+          <p className="word">
+            <span className="black">{blackString}</span>
+            <span className="red">{redString}</span>
+          </p>
+        );
+      }
+      charSoFar += i.length + 1;
+    });
+
+    // output.map((o: React.JSX.Element) => {
+    //   console.log(o);
+    // });
+
+    console.log(output);
+
+    return (
+      <>
+        {" "}
+        {output.map((o: React.JSX.Element) => {
+          o;
+        })}
+      </>
+    );
+    // if (i < props.characterLimit)
+    //   revision_text_a = revision_text_a.concat(text[i]);
+    // else revision_text_b = revision_text_b.concat(text[i]);
+
+    // props.output_setter(text);
+
+    // return (
+    //   <>
+    //     {props.characterLimit == -1 ? (
+    //       <span className="black">{text}</span>
+    //     ) : (
+    //       <>
+    //         <span className="black">{revision_text_a}</span>
+    //         <span className="red">{revision_text_b}</span>{" "}
+    //       </>
+    //     )}
+    //   </>
+    // );
+  }
+
   return (
     <div className="editor">
       <textarea
@@ -64,7 +141,9 @@ function EditorBody(props: setterProps) {
       />
 
       <div className="output editorBox">
-        {packageText.length > 0 ? createMarkupText(packageText) : "Output..."}
+        {packageText.length > 0
+          ? createSpanMarkupText(packageText)
+          : "Output..."}
       </div>
       {props.characterLimit == -1 ? (
         doNothing()
