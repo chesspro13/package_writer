@@ -4,6 +4,9 @@ import { useState } from "react";
 interface setterProps {
   output_setter: React.Dispatch<React.SetStateAction<string>>;
   characterLimit: number;
+  wordBankStateSetter: React.Dispatch<React.SetStateAction<boolean>>;
+  wordBankState: boolean;
+  setApiCallWord: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function doNothing() {
@@ -25,6 +28,10 @@ function EditorBody(props: setterProps) {
 
   function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setPackageText(event.target.value);
+  }
+
+  function toggleWordBank() {
+    props.wordBankStateSetter(!props.wordBankState);
   }
 
   // Depricated
@@ -62,33 +69,29 @@ function EditorBody(props: setterProps) {
     let output: React.JSX.Element[] = new Array();
     let charSoFar = 0;
 
-    console.log(input);
-
     for (let j = 0; j < input.length; j++) {
       let i = input[j];
 
       if (charSoFar + i.length <= props.characterLimit) {
-        console.log("This");
         output.push(
           <span
             className="word"
-            // onClick={(event) => {
-            //   (event.target as Element).classList.add("red");
-            //   console.log("Clicked");
-            // }}
+            onClick={(event) => {
+              (event.target as Element).classList.add("clicked");
+              toggleWordBank();
+              props.setApiCallWord(i);
+            }}
           >
             <span> {i} </span>
           </span>
         );
       } else if (charSoFar > props.characterLimit) {
-        console.log("That");
         output.push(
           <span className="word">
             <span className="red">{i} </span>
           </span>
         );
       } else {
-        console.log("The Other");
         let blackString = "";
         let redString = "";
         for (let j = 1; j < i.length + 1; j++) {

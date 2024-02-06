@@ -1,0 +1,19 @@
+.word_bank_container {
+  max-width: 800px;
+  width: 60vw;
+  height: 200px;
+  border: 1px solid whitesmoke;
+  overflow-wrap: break-word;
+}
+
+.callWord {
+  text-align: center;
+}
+
+.suggestion {
+  padding: 20px;
+}
+
+.suggestions {
+  padding: 20px;
+}

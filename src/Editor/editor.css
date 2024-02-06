@@ -37,3 +37,7 @@ footer {
 .black {
   color: lightgray;
 }
+
+.clicked {
+  border: 1px solid teal;
+}

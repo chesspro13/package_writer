@@ -7,6 +7,7 @@ import Footer from "../Components/Footer/footer";
 import Menu from "../../src/Components/SidePanel/Menu";
 import "../../src/Components/SidePanel/Menu.css";
 import SideNote from "../Components/SideNotes/SideNote";
+import WordBank from "../Components/WordBank/WordBank";
 
 function MainEditor() {
   const [revisions, setRevisions] = useState([""]);
@@ -15,6 +16,8 @@ function MainEditor() {
   const [menuToggle, setMenuToggle] = useState(false);
   const [notesToggle, setNotesToggle] = useState(false);
   const [noteCounter, setNoteCounter] = useState(0);
+  const [wordBankState, setWordBankState] = useState(false);
+  const [apiCallWord, setApiCallWord] = useState("");
 
   return (
     <>
@@ -24,7 +27,11 @@ function MainEditor() {
           <EditorBody
             output_setter={setOutput}
             characterLimit={characterLimit}
+            wordBankStateSetter={setWordBankState}
+            wordBankState={wordBankState}
+            setApiCallWord={setApiCallWord}
           />
+          <WordBank enabled={wordBankState} apiCallWord={apiCallWord} />
           <RevisionButtons
             revisions={revisions}
             updateRevisions={setRevisions}
