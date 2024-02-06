@@ -27,6 +27,7 @@ function EditorBody(props: setterProps) {
     setPackageText(event.target.value);
   }
 
+  // Depricated
   function createMarkupText(text: string) {
     let revision_text_a = "";
     let revision_text_b = "";
@@ -54,32 +55,40 @@ function EditorBody(props: setterProps) {
     );
   }
 
-  // Stuck here, not able to get any output.
   function createSpanMarkupText(text: string) {
     charactersUsed = getTrueSize(text);
 
     let input = text.split(" ");
-    let output: React.JSX.Element[] = [];
+    let output: React.JSX.Element[] = new Array();
     let charSoFar = 0;
 
-    input.forEach((i) => {
-      if (i == "" || " ") {
-        return;
-      }
-      if (charSoFar + i.length < props.characterLimit) {
+    console.log(input);
+
+    for (let j = 0; j < input.length; j++) {
+      let i = input[j];
+
+      if (charSoFar + i.length <= props.characterLimit) {
+        console.log("This");
         output.push(
-          <p className="word">
+          <span
+            className="word"
+            // onClick={(event) => {
+            //   (event.target as Element).classList.add("red");
+            //   console.log("Clicked");
+            // }}
+          >
             <span> {i} </span>
-          </p>
+          </span>
         );
       } else if (charSoFar > props.characterLimit) {
+        console.log("That");
         output.push(
-          <p className="word">
-            {" "}
+          <span className="word">
             <span className="red">{i} </span>
-          </p>
+          </span>
         );
       } else {
+        console.log("The Other");
         let blackString = "";
         let redString = "";
         for (let j = 1; j < i.length + 1; j++) {
@@ -88,47 +97,16 @@ function EditorBody(props: setterProps) {
         }
 
         output.push(
-          <p className="word">
+          <span className="word">
             <span className="black">{blackString}</span>
             <span className="red">{redString}</span>
-          </p>
+          </span>
         );
       }
       charSoFar += i.length + 1;
-    });
+    }
 
-    // output.map((o: React.JSX.Element) => {
-    //   console.log(o);
-    // });
-
-    console.log(output);
-
-    return (
-      <>
-        {" "}
-        {output.map((o: React.JSX.Element) => {
-          o;
-        })}
-      </>
-    );
-    // if (i < props.characterLimit)
-    //   revision_text_a = revision_text_a.concat(text[i]);
-    // else revision_text_b = revision_text_b.concat(text[i]);
-
-    // props.output_setter(text);
-
-    // return (
-    //   <>
-    //     {props.characterLimit == -1 ? (
-    //       <span className="black">{text}</span>
-    //     ) : (
-    //       <>
-    //         <span className="black">{revision_text_a}</span>
-    //         <span className="red">{revision_text_b}</span>{" "}
-    //       </>
-    //     )}
-    //   </>
-    // );
+    return output;
   }
 
   return (
@@ -141,9 +119,11 @@ function EditorBody(props: setterProps) {
       />
 
       <div className="output editorBox">
-        {packageText.length > 0
-          ? createSpanMarkupText(packageText)
-          : "Output..."}
+        {packageText.length > 0 ? (
+          <>{createSpanMarkupText(packageText).map((a) => a)}</>
+        ) : (
+          "Output..."
+        )}
       </div>
       {props.characterLimit == -1 ? (
         doNothing()
