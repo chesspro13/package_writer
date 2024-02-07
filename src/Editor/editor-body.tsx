@@ -68,6 +68,7 @@ function EditorBody(props: setterProps) {
 
   const [apiCallWord, setApiCallWord] = useState(String);
   function createSpanMarkupText(text: string) {
+    let index = 0;
     charactersUsed = getTrueSize(text);
 
     let input = text.split(" ");
@@ -85,10 +86,12 @@ function EditorBody(props: setterProps) {
 
     for (let j = 0; j < input.length; j++) {
       let i = input[j];
+      if (i == "") continue;
 
       if (charSoFar + i.length <= props.characterLimit) {
         output.push(
           <span
+            key={index}
             className={i == apiCallWord ? "word clicked" : "word"}
             onClick={() => {
               updateClickedWord(i);
@@ -100,6 +103,7 @@ function EditorBody(props: setterProps) {
       } else if (charSoFar > props.characterLimit) {
         output.push(
           <span
+            key={index}
             className={i == apiCallWord ? "word clicked" : "word"}
             onClick={() => {
               updateClickedWord(i);
@@ -118,6 +122,7 @@ function EditorBody(props: setterProps) {
 
         output.push(
           <span
+            key={index}
             className={i == apiCallWord ? "word clicked" : "word"}
             onClick={() => {
               updateClickedWord(i);
@@ -129,6 +134,7 @@ function EditorBody(props: setterProps) {
         );
       }
       charSoFar += i.length + 1;
+      index++;
     }
 
     return output;
@@ -154,8 +160,10 @@ function EditorBody(props: setterProps) {
         doNothing()
       ) : (
         <ul className="char-data">
-          <li>Used: {charactersUsed}</li>
-          <li>Avaliable: {props.characterLimit - charactersUsed}</li>
+          <li key="used">Used: {charactersUsed}</li>
+          <li key="avaliable">
+            Avaliable: {props.characterLimit - charactersUsed}
+          </li>
         </ul>
       )}
     </div>

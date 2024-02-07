@@ -34,13 +34,15 @@ function RevisionElement(props: outputProp) {
     return output.trim().length;
   }
 
-  function createDiv(output: string) {
+  function createDiv(output: string, i: number) {
     return (
       <div className="revision">
         <div>{createMarkupText(output)}</div>
         <ul className="revision_character_list">
-          <li>Used: {getTrueSize(output)}</li>
-          <li>Left: {props.characterLimit - getTrueSize(output)}</li>
+          <li key={"used" + i.toString()}>Used: {getTrueSize(output)}</li>
+          <li key={"left" + i.toString()}>
+            Left: {props.characterLimit - getTrueSize(output)}
+          </li>
         </ul>
       </div>
     );
@@ -49,8 +51,8 @@ function RevisionElement(props: outputProp) {
   function doNothing() {}
 
   function drawList(revisions: string[]) {
-    return revisions.map((output) => {
-      return <>{output != "" ? createDiv(output) : doNothing()}</>;
+    return revisions.map((output, i) => {
+      return <>{output != "" ? createDiv(output, i) : doNothing()}</>;
     });
   }
 

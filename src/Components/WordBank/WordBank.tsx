@@ -22,7 +22,11 @@ function WordBank(props: WordBankInterface) {
         </h1>
         <div className="suggestions">
           {props.wordBank
-            ? text.map((i: string) => <span className="suggestion">{i}</span>)
+            ? text.map((i: string, n: number) => (
+                <span key={n} className="suggestion">
+                  {i}
+                </span>
+              ))
             : "Something went wrong"}
         </div>
       </div>
