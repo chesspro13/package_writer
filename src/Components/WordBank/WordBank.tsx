@@ -17,7 +17,9 @@ function WordBank(props: WordBankInterface) {
 
     return (
       <div className="word_bank_container">
-        <h1 className="callWord">{props.apiCallWord.toUpperCase()}</h1>
+        <h1 className="callWord">
+          {props.apiCallWord.toUpperCase().replace(/[\W]/g, "_")}.trim()
+        </h1>
         <div className="suggestions">
           {props.wordBank
             ? text.map((i: string) => <span className="suggestion">{i}</span>)
