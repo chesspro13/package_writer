@@ -56,8 +56,6 @@ function EditorBody(props: setterProps) {
     try {
       const response = await fetch(url, options);
       const result = await response.text();
-      console.log(result);
-      console.log(typeof result);
       return result;
     } catch (error) {
       console.error(error);

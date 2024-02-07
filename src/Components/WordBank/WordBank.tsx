@@ -12,8 +12,6 @@ interface WordBankInterface {
 
 function WordBank(props: WordBankInterface) {
   function buildContainer() {
-    console.log(props.wordBank);
-
     if (props.wordBank == "") return <></>;
     let text = JSON.parse(props.wordBank)["synonyms"];
 
