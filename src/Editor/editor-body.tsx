@@ -50,7 +50,7 @@ function EditorBody(props: setterProps) {
     const options = {
       method: "GET",
       headers: {
-        "X-RapidAPI-Key": "",
+        "X-RapidAPI-Key": "0c636705c6msh2d92ea17f774b4ap1147b2jsn94f4ac2f7d58",
         "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com",
       },
     };
@@ -61,9 +61,9 @@ function EditorBody(props: setterProps) {
       return result;
     } catch (error) {
       console.error(error);
-      return '{"synonyms":"Unable to fetch words. Please try again later."}';
+      return '{"messages":"Unable to fetch words. Please try again later."}';
     }
-    return '{"synonyms":"Error"}';
+    return '{"messages":"Error"}';
   }
 
   const [apiCallWord, setApiCallWord] = useState(String);
@@ -81,7 +81,11 @@ function EditorBody(props: setterProps) {
         setApiCallWord(word);
         props.setApiCallWord(word);
         getWord(word).then((a) => props.setWordBank(a));
-      } else disableWordBank();
+      } else {
+        disableWordBank();
+        setApiCallWord("");
+        props.setApiCallWord("");
+      }
     }
 
     for (let j = 0; j < input.length; j++) {

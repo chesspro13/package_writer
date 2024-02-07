@@ -4,6 +4,7 @@
   height: 200px;
   border: 1px solid whitesmoke;
   overflow-wrap: break-word;
+  text-align: justify;
 }
 
 .callWord {
@@ -11,9 +12,16 @@
 }
 
 .suggestion {
-  padding: 20px;
+  /* padding: 20px; */
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .suggestions {
-  padding: 20px;
+  /* padding: 20px; */
+  text-align: justify;
+}
+
+.error {
+  text-align: center;
 }
