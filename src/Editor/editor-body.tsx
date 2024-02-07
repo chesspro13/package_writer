@@ -44,7 +44,7 @@ function EditorBody(props: setterProps) {
     if (word == "") return '{"synonyms":"Error"}';
     // Make a way to return if the word was the previous word found
     // if (word == props.apiCallWord ) return
-    const safeWord = word.replace(/[\W]/g, "").trim();
+    const safeWord = word.replace(/[^\w\s]/gi, "").trim();
     const url =
       "https://wordsapiv1.p.rapidapi.com/words/" + safeWord + "/synonyms";
     const options = {
