@@ -17,7 +17,9 @@ function MainEditor() {
   const [notesToggle, setNotesToggle] = useState(false);
   const [noteCounter, setNoteCounter] = useState(0);
   const [wordBankState, setWordBankState] = useState(false);
-  const [apiCallWord, setApiCallWord] = useState("");
+  const [wordBank, setWordBank] = useState("");
+
+  const [apiCallWord, setApiCallWord] = useState('{"synonyms":"Error"}');
 
   return (
     <>
@@ -30,8 +32,15 @@ function MainEditor() {
             wordBankStateSetter={setWordBankState}
             wordBankState={wordBankState}
             setApiCallWord={setApiCallWord}
+            apiCallWord={apiCallWord}
+            setWordBank={setWordBank}
           />
-          <WordBank enabled={wordBankState} apiCallWord={apiCallWord} />
+          <WordBank
+            enabled={wordBankState}
+            apiCallWord={apiCallWord}
+            wordBank={wordBank}
+            setWordBank={setWordBank}
+          />
           <RevisionButtons
             revisions={revisions}
             updateRevisions={setRevisions}

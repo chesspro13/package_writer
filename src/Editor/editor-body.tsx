@@ -7,6 +7,8 @@ interface setterProps {
   wordBankStateSetter: React.Dispatch<React.SetStateAction<boolean>>;
   wordBankState: boolean;
   setApiCallWord: React.Dispatch<React.SetStateAction<string>>;
+  apiCallWord: string;
+  setWordBank: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function doNothing() {
@@ -30,38 +32,41 @@ function EditorBody(props: setterProps) {
     setPackageText(event.target.value);
   }
 
-  function toggleWordBank() {
-    props.wordBankStateSetter(!props.wordBankState);
+  function disableWordBank() {
+    props.wordBankStateSetter(false);
   }
 
-  // Depricated
-  function createMarkupText(text: string) {
-    let revision_text_a = "";
-    let revision_text_b = "";
-
-    charactersUsed = getTrueSize(text);
-
-    for (var i = 0; i < text.length; i++)
-      if (i < props.characterLimit)
-        revision_text_a = revision_text_a.concat(text[i]);
-      else revision_text_b = revision_text_b.concat(text[i]);
-
-    props.output_setter(text);
-
-    return (
-      <>
-        {props.characterLimit == -1 ? (
-          <span className="black">{text}</span>
-        ) : (
-          <>
-            <span className="black">{revision_text_a}</span>
-            <span className="red">{revision_text_b}</span>{" "}
-          </>
-        )}
-      </>
-    );
+  function enableWordBank() {
+    props.wordBankStateSetter(true);
   }
 
+  async function getWord(word: string) {
+    if (word == "") return '{"synonyms":"Error"}';
+    // Make a way to return if the word was the previous word found
+    // if (word == props.apiCallWord ) return
+    const url = "https://wordsapiv1.p.rapidapi.com/words/" + word + "/synonyms";
+    const options = {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": "",
+        "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com",
+      },
+    };
+
+    try {
+      const response = await fetch(url, options);
+      const result = await response.text();
+      console.log(result);
+      console.log(typeof result);
+      return result;
+    } catch (error) {
+      console.error(error);
+      return '{"synonyms":"Unable to fetch words. Please try again later."}';
+    }
+    return '{"synonyms":"Error"}';
+  }
+
+  const [apiCallWord, setApiCallWord] = useState(String);
   function createSpanMarkupText(text: string) {
     charactersUsed = getTrueSize(text);
 
@@ -69,17 +74,24 @@ function EditorBody(props: setterProps) {
     let output: React.JSX.Element[] = new Array();
     let charSoFar = 0;
 
+    function updateClickedWord(word: string) {
+      if (word != apiCallWord) {
+        enableWordBank();
+        setApiCallWord(word);
+        props.setApiCallWord(word);
+        getWord(word).then((a) => props.setWordBank(a));
+      } else disableWordBank();
+    }
+
     for (let j = 0; j < input.length; j++) {
       let i = input[j];
 
       if (charSoFar + i.length <= props.characterLimit) {
         output.push(
           <span
-            className="word"
-            onClick={(event) => {
-              (event.target as Element).classList.add("clicked");
-              toggleWordBank();
-              props.setApiCallWord(i);
+            className={i == apiCallWord ? "word clicked" : "word"}
+            onClick={() => {
+              updateClickedWord(i);
             }}
           >
             <span> {i} </span>
@@ -87,7 +99,12 @@ function EditorBody(props: setterProps) {
         );
       } else if (charSoFar > props.characterLimit) {
         output.push(
-          <span className="word">
+          <span
+            className={i == apiCallWord ? "word clicked" : "word"}
+            onClick={() => {
+              updateClickedWord(i);
+            }}
+          >
             <span className="red">{i} </span>
           </span>
         );
@@ -100,7 +117,12 @@ function EditorBody(props: setterProps) {
         }
 
         output.push(
-          <span className="word">
+          <span
+            className={i == apiCallWord ? "word clicked" : "word"}
+            onClick={() => {
+              updateClickedWord(i);
+            }}
+          >
             <span className="black">{blackString}</span>
             <span className="red">{redString}</span>
           </span>
