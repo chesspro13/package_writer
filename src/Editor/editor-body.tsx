@@ -9,6 +9,7 @@ interface setterProps {
   setApiCallWord: React.Dispatch<React.SetStateAction<string>>;
   apiCallWord: string;
   setWordBank: React.Dispatch<React.SetStateAction<string>>;
+  activeTool: string;
 }
 
 function doNothing() {
@@ -41,7 +42,8 @@ function EditorBody(props: setterProps) {
   }
 
   async function getWord(word: string) {
-    if (word == "") return '{"synonyms":"Error"}';
+    if (word == "" || props.activeTool != "Word Lookup")
+      return '{"message":"Error"}';
     // Make a way to return if the word was the previous word found
     // if (word == props.apiCallWord ) return
     const safeWord = word.replace(/[^\w\s]/gi, "").trim();

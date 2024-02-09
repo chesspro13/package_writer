@@ -8,6 +8,8 @@ import Menu from "../../src/Components/SidePanel/Menu";
 import "../../src/Components/SidePanel/Menu.css";
 import SideNote from "../Components/SideNotes/SideNote";
 import WordBank from "../Components/WordBank/WordBank";
+import ToolBar from "../Components/ToolBar/ToolBar";
+import "../Components/ToolBar/ToolBar.css";
 
 function MainEditor() {
   const [revisions, setRevisions] = useState([""]);
@@ -19,11 +21,22 @@ function MainEditor() {
   const [wordBankState, setWordBankState] = useState(false);
   const [wordBank, setWordBank] = useState("");
 
+  const [toolbarMode, setToolbarMode] = useState("Word Lookup");
+  const [activeTool, setActiveTool] = useState("Synonyms");
+
   const [apiCallWord, setApiCallWord] = useState('{"synonyms":"Error"}');
 
   return (
     <>
       <NavigationBar toggleMenu={setMenuToggle} menuOpen={menuToggle} />
+      <div className="toolbarContainer">
+        <ToolBar
+          toolbarMode={toolbarMode}
+          setToolbarMode={setToolbarMode}
+          activeTool={activeTool}
+          setActiveTool={setActiveTool}
+        />
+      </div>
       <div className="page">
         <div className="body">
           <EditorBody
@@ -34,6 +47,7 @@ function MainEditor() {
             setApiCallWord={setApiCallWord}
             apiCallWord={apiCallWord}
             setWordBank={setWordBank}
+            activeTool={activeTool}
           />
           <WordBank
             enabled={wordBankState}
