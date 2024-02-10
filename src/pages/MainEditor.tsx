@@ -7,7 +7,7 @@ import Footer from "../Components/Footer/footer";
 import Menu from "../../src/Components/SidePanel/Menu";
 import "../../src/Components/SidePanel/Menu.css";
 import SideNote from "../Components/SideNotes/SideNote";
-import WordBank from "../Components/WordBank/WordBank";
+// import WordBank from "../UnusedFeatures/WordBank/WordBank";
 import ToolBar from "../Components/ToolBar/ToolBar";
 import "../Components/ToolBar/ToolBar.css";
 
@@ -19,9 +19,10 @@ function MainEditor() {
   const [notesToggle, setNotesToggle] = useState(false);
   const [noteCounter, setNoteCounter] = useState(0);
   const [wordBankState, setWordBankState] = useState(false);
-  const [wordBank, setWordBank] = useState("");
+  // const [wordBank, setWordBank] = useState([]);
+  const [wordApiResponse, setWordApiResponse] = useState();
 
-  const [toolbarMode, setToolbarMode] = useState("Word Lookup");
+  const [toolbarMode, setToolbarMode] = useState("Highlighting");
   const [activeTool, setActiveTool] = useState("Synonyms");
 
   const [apiCallWord, setApiCallWord] = useState('{"synonyms":"Error"}');
@@ -46,15 +47,20 @@ function MainEditor() {
             wordBankState={wordBankState}
             setApiCallWord={setApiCallWord}
             apiCallWord={apiCallWord}
-            setWordBank={setWordBank}
+            // setWordBank={setWordBank}
             activeTool={activeTool}
+            toolbarMode={toolbarMode}
+            setWordApiResponse={setWordApiResponse}
+            wordApiResponse={wordApiResponse}
           />
-          <WordBank
+          {/* 
+            Removed until word bank is fixed
+            <WordBank
             enabled={wordBankState}
             apiCallWord={apiCallWord}
             wordBank={wordBank}
             setWordBank={setWordBank}
-          />
+          /> */}
           <RevisionButtons
             revisions={revisions}
             updateRevisions={setRevisions}

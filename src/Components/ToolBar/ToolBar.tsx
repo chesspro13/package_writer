@@ -21,22 +21,23 @@ function ToolBar(props: ToolBarModeInterface) {
   }
 
   function getActionList() {
-    const wordLookupMenu = ["Synonyms", "Similar", "Definition", "Example"];
+    // Need to get working
+    // const wordLookupMenu = ["Synonyms", "Similar", "Definition", "Example"];
     const highlightingMenu = ["Word", "Sentance"];
     const duplicateMenu = ["On", "Off"];
     const ai = ["N/A"];
 
     switch (toolbarMode) {
-      case "Word Lookup":
-        return wordLookupMenu;
+      //   case "Word Lookup":
+      //     return wordLookupMenu;
       case "Highlighting":
-        return ["Word", "Sentance"];
+        return highlightingMenu;
       case "Duplicate Finder":
-        return ["On", "Off"];
+        return duplicateMenu;
       case "AI":
-        return ["N/A"];
+        return ai;
     }
-    return ["Error"];
+    return ["Error: Switch failed"];
   }
 
   return (
@@ -44,7 +45,7 @@ function ToolBar(props: ToolBarModeInterface) {
       <div className="dropdown">
         <button className="dropbtn">{toolbarMode}</button>
         <div className="dropdown-content">
-          <p onClick={(event) => setToolbarMode("Word Lookup")}>Word Lookup</p>
+          {/* <p onClick={(event) => setToolbarMode("Word Lookup")}>Word Lookup</p> */}
           <p onClick={(event) => setToolbarMode("Highlighting")}>
             Highlighting
           </p>

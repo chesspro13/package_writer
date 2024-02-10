@@ -8,8 +8,12 @@ interface setterProps {
   wordBankState: boolean;
   setApiCallWord: React.Dispatch<React.SetStateAction<string>>;
   apiCallWord: string;
-  setWordBank: React.Dispatch<React.SetStateAction<string>>;
+  // TODO: Fix word bank stuff
+  // setWordBank: React.Dispatch<React.SetStateAction<[]>>;
   activeTool: string;
+  toolbarMode: string;
+  setWordApiResponse: React.Dispatch<React.SetStateAction<any>>;
+  wordApiResponse: any;
 }
 
 function doNothing() {
@@ -27,46 +31,89 @@ function getTrueSize(str: string) {
 
 function EditorBody(props: setterProps) {
   const [packageText, setPackageText] = useState("");
+  const [promiseResolved, setPromiseResolved] = useState(false);
   let charactersUsed = 0;
 
   function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setPackageText(event.target.value);
   }
 
-  function disableWordBank() {
-    props.wordBankStateSetter(false);
-  }
+  // function disableWordBank() {
+  //   props.wordBankStateSetter(false);
+  // }
 
-  function enableWordBank() {
-    props.wordBankStateSetter(true);
-  }
+  // function enableWordBank() {
+  //   props.wordBankStateSetter(true);
+  // }
 
-  async function getWord(word: string) {
-    if (word == "" || props.activeTool != "Word Lookup")
-      return '{"message":"Error"}';
-    // Make a way to return if the word was the previous word found
-    // if (word == props.apiCallWord ) return
-    const safeWord = word.replace(/[^\w\s]/gi, "").trim();
-    const url =
-      "https://wordsapiv1.p.rapidapi.com/words/" + safeWord + "/synonyms";
-    const options = {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": "0c636705c6msh2d92ea17f774b4ap1147b2jsn94f4ac2f7d58",
-        "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com",
-      },
-    };
+  // function getListOfWords(responseArray: string[]) {
+  //   if (props.wordApiResponse == undefined)
+  //     return { message: "promise not returned yet" };
+  //   props.wordApiResponse["results"].map((element: any) => {
+  //     "synonyms" in element
+  //       ? element["synonyms"].map((words: string) =>
+  //           !responseArray.includes(words) ? responseArray.push(words) : words
+  //         )
+  //       : element;
+  //   });
+  // }
 
-    try {
-      const response = await fetch(url, options);
-      const result = await response.text();
-      return result;
-    } catch (error) {
-      console.error(error);
-      return '{"messages":"Unable to fetch words. Please try again later."}';
-    }
-    return '{"messages":"Error"}';
-  }
+  // function setWordBank(json: any) {
+  //   const wordBank: string[] = [];
+
+  //   json["results"].map((element: any) => {
+  //     "synonyms" in element
+  //       ? element["synonyms"].map((words: string) =>
+  //           !wordBank.includes(words) ? wordBank.push(words) : words
+  //         )
+  //       : element;
+  //     "similarTo" in element
+  //       ? element["similarTo"].map((words: string) =>
+  //           !wordBank.includes(words) ? wordBank.push(words) : words
+  //         )
+  //       : element;
+  //   });
+
+  //   // props.setWordBank(wordBank);
+  // }
+
+  // async function getWord(word: string) {
+  //   if (word == "") return '{"message":"Error: Word empty!"}';
+  //   if (props.toolbarMode != "Word Lookup")
+  //     return '{"message":"Error: Word Lookup Tool not selected!"}';
+
+  //   const responseArray: string[] = [];
+  //   if (promiseResolved && word == props.wordApiResponse["word"])
+  //     return getListOfWords(responseArray);
+  //   // Make a way to return if the word was the previous word found
+  //   // if (word == props.apiCallWord ) return
+  //   const safeWord = word.replace(/[^\w\s]/gi, "").trim();
+  //   const url = "https://wordsapiv1.p.rapidapi.com/words/" + safeWord;
+  //   const options = {
+  //     method: "GET",
+  //     headers: {
+  //       "X-RapidAPI-Key": "7d9cb91432mshfe2fa74efc910f4p1ecd48jsn6c46666d0ddd",
+  //       "X-RapidAPI-Host": "wordsapiv1.p.rapidapi.com",
+  //     },
+  //   };
+
+  //   try {
+  //     setPromiseResolved(false);
+  //     const response = await fetch(url, options);
+  //     const result = await response.text();
+  //     const resultJson = await JSON.parse(result);
+  //     console.log(resultJson);
+  //     props.setApiCallWord(resultJson["word"]);
+  //     props.setWordApiResponse(resultJson);
+  //     setWordBank(resultJson);
+  //     setPromiseResolved(true);
+  //     return getListOfWords(responseArray);
+  //   } catch (error) {
+  //     console.error(error);
+  //     return '{"messages":"Unable to fetch words. Please try again later."}';
+  //   }
+  //   return '{"messages":"Error"}';
+  // }
 
   const [apiCallWord, setApiCallWord] = useState(String);
   function createSpanMarkupText(text: string) {
@@ -77,18 +124,18 @@ function EditorBody(props: setterProps) {
     let output: React.JSX.Element[] = new Array();
     let charSoFar = 0;
 
-    function updateClickedWord(word: string) {
-      if (word != apiCallWord) {
-        enableWordBank();
-        setApiCallWord(word);
-        props.setApiCallWord(word);
-        getWord(word).then((a) => props.setWordBank(a));
-      } else {
-        disableWordBank();
-        setApiCallWord("");
-        props.setApiCallWord("");
-      }
-    }
+    // function updateClickedWord(word: string) {
+    //   if (word != apiCallWord) {
+    //     enableWordBank();
+    //     setApiCallWord(word);
+    //     props.setApiCallWord(word);
+    //     getWord(word);
+    //   } else {
+    //     disableWordBank();
+    //     setApiCallWord("");
+    //     props.setApiCallWord("");
+    //   }
+    // }
 
     for (let j = 0; j < input.length; j++) {
       let i = input[j];
@@ -100,7 +147,7 @@ function EditorBody(props: setterProps) {
             key={index}
             className={i == apiCallWord ? "word clicked" : "word"}
             onClick={() => {
-              updateClickedWord(i);
+              // updateClickedWord(i);
             }}
           >
             <span> {i} </span>
@@ -112,7 +159,7 @@ function EditorBody(props: setterProps) {
             key={index}
             className={i == apiCallWord ? "word clicked" : "word"}
             onClick={() => {
-              updateClickedWord(i);
+              // updateClickedWord(i);
             }}
           >
             <span className="red">{i} </span>
@@ -131,7 +178,7 @@ function EditorBody(props: setterProps) {
             key={index}
             className={i == apiCallWord ? "word clicked" : "word"}
             onClick={() => {
-              updateClickedWord(i);
+              // updateClickedWord(i);
             }}
           >
             <span className="black">{blackString}</span>
