@@ -1,11 +1,12 @@
 import "./revision.css";
+import { useEditorContext } from "../Context";
 
 interface outputProp {
-  revisions: string[];
-  characterLimit: number;
+  revisions: string[] | undefined;
 }
 
 function RevisionElement(props: outputProp) {
+  const editorContext = useEditorContext();
   function createMarkupText(text: string) {
     let revision_text_a = "";
     let revision_text_b = "";
@@ -13,7 +14,7 @@ function RevisionElement(props: outputProp) {
     // charactersUsed = getTrueSize(text);
 
     for (var i = 0; i < text.length; i++)
-      if (i < props.characterLimit)
+      if (i < editorContext.characterLimit)
         revision_text_a = revision_text_a.concat(text[i]);
       else revision_text_b = revision_text_b.concat(text[i]);
 
@@ -41,7 +42,7 @@ function RevisionElement(props: outputProp) {
         <ul className="revision_character_list">
           <li key={"used" + i.toString()}>Used: {getTrueSize(output)}</li>
           <li key={"left" + i.toString()}>
-            Left: {props.characterLimit - getTrueSize(output)}
+            Left: {editorContext.characterLimit - getTrueSize(output)}
           </li>
         </ul>
       </div>
@@ -60,6 +61,7 @@ function RevisionElement(props: outputProp) {
     return <div className="empty">No revisions to display</div>;
   }
 
+  if (props.revisions == undefined) return <></>;
   if (props.revisions.length == 0) return <p>No data</p>;
 
   return (

@@ -12,8 +12,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Routes>
         <Route index element={<MainEditor />} />
-        <Route path="about" element={<About />} />
-        <Route path="support" element={<Support />} />
+        {/* <Route path="about" element={<About />} />
+        <Route path="support" element={<Support />} /> */}
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

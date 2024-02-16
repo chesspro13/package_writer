@@ -1,19 +1,10 @@
 import "./editor.css";
 import { useState } from "react";
+import { useEditorContext, useWordbankContext } from "../Context";
 
 interface setterProps {
-  output_setter: React.Dispatch<React.SetStateAction<string>>;
-  characterLimit: number;
-  wordBankStateSetter: React.Dispatch<React.SetStateAction<boolean>>;
-  wordBankState: boolean;
-  setApiCallWord: React.Dispatch<React.SetStateAction<string>>;
-  apiCallWord: string;
-  // TODO: Fix word bank stuff
-  // setWordBank: React.Dispatch<React.SetStateAction<[]>>;
   activeTool: string;
   toolbarMode: string;
-  setWordApiResponse: React.Dispatch<React.SetStateAction<any>>;
-  wordApiResponse: any;
 }
 
 function doNothing() {
@@ -33,6 +24,9 @@ function EditorBody(props: setterProps) {
   const [packageText, setPackageText] = useState("");
   const [promiseResolved, setPromiseResolved] = useState(false);
   let charactersUsed = 0;
+
+  const editorContext = useEditorContext();
+  // const wordBankContext = useWordbankContext();
 
   function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setPackageText(event.target.value);
@@ -137,11 +131,20 @@ function EditorBody(props: setterProps) {
     //   }
     // }
 
+    if (editorContext.characterLimit == undefined) {
+      for (let j = 0; j < input.length; j++) {
+        let i = input[j];
+        if (i == "") continue;
+        output.push(<span>{i + " "}</span>);
+      }
+      return output;
+    }
+
     for (let j = 0; j < input.length; j++) {
       let i = input[j];
       if (i == "") continue;
 
-      if (charSoFar + i.length <= props.characterLimit) {
+      if (charSoFar + i.length <= editorContext.characterLimit) {
         output.push(
           <span
             key={index}
@@ -153,7 +156,7 @@ function EditorBody(props: setterProps) {
             <span> {i} </span>
           </span>
         );
-      } else if (charSoFar > props.characterLimit) {
+      } else if (charSoFar > editorContext.characterLimit) {
         output.push(
           <span
             key={index}
@@ -169,7 +172,8 @@ function EditorBody(props: setterProps) {
         let blackString = "";
         let redString = "";
         for (let j = 1; j < i.length + 1; j++) {
-          if (charSoFar + j < props.characterLimit) blackString += i[j - 1];
+          if (charSoFar + j < editorContext.characterLimit)
+            blackString += i[j - 1];
           else redString += i[j - 1];
         }
 
@@ -209,13 +213,16 @@ function EditorBody(props: setterProps) {
           "Output..."
         )}
       </div>
-      {props.characterLimit == -1 ? (
+      {editorContext.characterLimit == -1 ? (
         doNothing()
       ) : (
         <ul className="char-data">
           <li key="used">Used: {charactersUsed}</li>
           <li key="avaliable">
-            Avaliable: {props.characterLimit - charactersUsed}
+            {editorContext.characterLimit == undefined
+              ? "No Limit"
+              : "Avaliable: " +
+                (editorContext.characterLimit - charactersUsed).toString()}
           </li>
         </ul>
       )}

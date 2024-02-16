@@ -12,7 +12,7 @@ function Support() {
 
   return (
     <>
-      <NavigationBar toggleMenu={doA} menuOpen={a} />
+      <NavigationBar allowSidebar={false} />
       <div className="explination">
         <div className="text">
           <h1>Hi, I'm Brandon, the developer behind PackageWriter.com.</h1>

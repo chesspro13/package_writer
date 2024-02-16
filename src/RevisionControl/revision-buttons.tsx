@@ -1,17 +1,21 @@
+import { useEditorContext } from "../Context";
 import "./revision.css";
 
 interface setterProps {
-  output: string;
-  revisions: string[];
-  updateRevisions: React.Dispatch<React.SetStateAction<string[]>>;
+  // output: string | undefined;
+  revisions: string[] | undefined;
+  updateRevisions: React.Dispatch<React.SetStateAction<string[] | undefined>>;
 }
 
 function RevisionButtons(props: setterProps) {
+  const editorContext = useEditorContext();
+
   function updateOutput() {
-    if (props.output == "") return;
+    if (editorContext.output == undefined) return;
+    if (props.revisions == undefined) return;
 
     props.updateRevisions([
-      props.output,
+      editorContext.output,
       ...props.revisions, // Put old items at the end
     ]);
   }

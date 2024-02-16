@@ -61,7 +61,11 @@ function ToolBar(props: ToolBarModeInterface) {
           {getActionList().map((option) => (
             <>
               {option == activeTool ? (
-                <li className="selected" onClick={() => activateTool(option)}>
+                <li
+                  className="selected"
+                  key={option}
+                  onClick={() => activateTool(option)}
+                >
                   {option}
                 </li>
               ) : (

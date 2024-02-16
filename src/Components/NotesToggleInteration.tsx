@@ -1,23 +1,23 @@
+import { useMenuContext } from "../Context";
 import "./NoteToggle.css";
 import ToggleSwitch from "./ToggleSwitch";
 
 interface notesToggleInterface {
-  setNotesMenuState: React.Dispatch<React.SetStateAction<boolean>>;
-  notesMenuState: boolean;
-  setNoteCounter: React.Dispatch<React.SetStateAction<number>>;
-  noteCount: number;
+  // setNotesMenuState: React.Dispatch<React.SetStateAction<boolean>>;
+  // notesMenuState: boolean;
+  // setNoteCounter: React.Dispatch<React.SetStateAction<number>>;
+  // noteCount: number;
 }
 function NotesToggle(props: notesToggleInterface) {
+  const menuContext = useMenuContext();
+
   function toggleNotes() {
-    props.setNotesMenuState(!props.notesMenuState);
+    menuContext.setNotesEnabled(!menuContext.notesEnabled);
   }
 
-  function updateCount(
-    value: number,
-    setter: React.Dispatch<React.SetStateAction<number>>
-  ) {
+  function updateCount(value: number) {
     if (value < 0) return;
-    else setter(value);
+    else menuContext.setNoteCount(value);
   }
 
   function getNoteCounter() {
@@ -27,21 +27,24 @@ function NotesToggle(props: notesToggleInterface) {
         <input
           type="number"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateCount(parseInt(e.target.value), props.setNoteCounter)
+            updateCount(parseInt(e.target.value))
           }
-          value={props.noteCount}
+          value={menuContext.noteCount}
         />
       </>
     );
+  }
+  function setNoteState(state: boolean) {
+    menuContext.setNotesEnabled(state);
   }
   return (
     <div>
       <ToggleSwitch
         label="Notes"
-        setState={props.setNotesMenuState}
-        state={props.notesMenuState}
+        // setState={menuContext.notesEnabled}
+        state={menuContext.notesEnabled}
       />
-      {props.notesMenuState ? getNoteCounter() : <></>}
+      {menuContext.menuVisible ? getNoteCounter() : <></>}
     </div>
   );
 }

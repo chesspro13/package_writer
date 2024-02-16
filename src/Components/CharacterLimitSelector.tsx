@@ -1,15 +1,24 @@
-interface SelectionEvent {
-  setCharacterLimit: React.Dispatch<React.SetStateAction<number>>;
-}
+import { useEditorContext } from "../Context";
 
-function CharacterLimitSelector(props: SelectionEvent) {
+function CharacterLimitSelector() {
+  const editorContext = useEditorContext();
+
+  function setCharLim(value: number) {
+    if (value == -1) editorContext.setCharacterLimit(undefined);
+    else editorContext.setCharacterLimit(value);
+  }
+
   return (
     <div>
       Max Characters:
       <select
-        defaultValue={350}
+        defaultValue={
+          editorContext.characterLimit == undefined
+            ? -1
+            : editorContext.characterLimit
+        }
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          props.setCharacterLimit(parseInt(e.target.value))
+          setCharLim(parseInt(e.target.value))
         }
       >
         <option value={250}>250</option>

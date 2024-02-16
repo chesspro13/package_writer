@@ -3,12 +3,11 @@ import "./ToggleSwitch.css";
 interface toggleInterface {
   label: string;
   state: boolean;
-  setState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function ToggleSwitch(props: toggleInterface) {
   function toggleState() {
-    props.setState(!props.state);
+    props.state = !props.state;
   }
 
   return (

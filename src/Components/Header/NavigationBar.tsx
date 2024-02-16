@@ -2,15 +2,23 @@ import Navbar from "react-bootstrap/Navbar";
 import "./NavigationBar.css";
 import { NavLink } from "react-router-dom";
 import hamburger_menu from "../../assets/icons/menu_icon.png";
+import { useMenuContext, MenuInterface } from "../../Context";
 
 interface navInterface {
-  toggleMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  menuOpen: boolean;
+  allowSidebar: boolean;
 }
 
 function NavigationBar(props: navInterface) {
+  // const menuContext = useMenuContext();
+  const menuContext = useMenuContext();
+
   function toggleMenu() {
-    props.toggleMenu(!props.menuOpen);
+    console.log(menuContext.menuVisible);
+    // menuContext.menuVisible = !menuContext.menuVisible;
+    menuContext.setMenuVisible(!menuContext.menuVisible);
+
+    console.log("Toggling stuff!");
+    console.log(menuContext.menuVisible);
   }
 
   return (
@@ -21,23 +29,27 @@ function NavigationBar(props: navInterface) {
             Package Writer{" "}
           </NavLink>
         </h1>
-        <NavLink to="/about" className={"sub-important navigation_button"}>
+        {/* <NavLink to="/about" className={"sub-important navigation_button"}>
           About
         </NavLink>
         <NavLink to="/support" className={"sub-important navigation_button"}>
           Support
-        </NavLink>
+        </NavLink> */}
       </Navbar>
       {/* <div className="nav_button_group">
         {props.showCharacters ? characterSelector(props) : doNothing()}
         {/* <Menu /> * /}
       </div> */}
-      <img
-        src={hamburger_menu}
-        alt="Menu"
-        className="hamburger_menu"
-        onClick={toggleMenu}
-      />
+      {props.allowSidebar ? (
+        <img
+          src={hamburger_menu}
+          alt="Menu"
+          className="hamburger_menu"
+          onClick={toggleMenu}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

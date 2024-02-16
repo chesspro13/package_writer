@@ -1,8 +1,9 @@
+import { useMenuContext } from "../../Context";
 import "./SideNote.css";
 
 interface notesToggleInterface {
-  menuToggle: boolean;
-  noteCount: number;
+  // menuToggle: boolean;
+  // noteCount: number;
 }
 function showNotes(noteCount: number) {
   let textBoxes = [];
@@ -21,7 +22,11 @@ function doNothing() {
   return <></>;
 }
 function SideNote(props: notesToggleInterface) {
-  return props.menuToggle ? showNotes(props.noteCount) : doNothing();
+  const menuContext = useMenuContext();
+
+  return menuContext.menuVisible
+    ? showNotes(menuContext.noteCount)
+    : doNothing();
 }
 
 export default SideNote;
