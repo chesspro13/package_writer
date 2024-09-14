@@ -53,6 +53,12 @@ function EditorBody(props: setterProps) {
       </>
     );
   }
+  
+  function getAId(){
+    fetch("http://localhost:27415/api/status").then(a => {
+      a.json().then(b => console.log( b["message"]));
+    })
+  }
 
   return (
     <div className="editor">
@@ -70,6 +76,7 @@ function EditorBody(props: setterProps) {
         doNothing()
       ) : (
         <ul className="char-data">
+          <li><button onClick={getAId}>Spice up</button></li>
           <li>Used: {charactersUsed}</li>
           <li>Avaliable: {props.characterLimit - charactersUsed}</li>
         </ul>
