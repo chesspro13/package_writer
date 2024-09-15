@@ -1,8 +1,7 @@
+import 'react-tabs/style/react-tabs.css';
 import "./editor.css";
 import { useState } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
-
-import 'react-tabs/style/react-tabs.css';
 
 interface setterProps {
   output_setter: React.Dispatch<React.SetStateAction<string>>;
@@ -31,6 +30,11 @@ function EditorBody(props: setterProps) {
   }
 
   function createMarkupText(text: string) {
+
+    if ( text === undefined ){
+      return <p>Output... </p>
+    }
+
     let revision_text_a = "";
     let revision_text_b = "";
 
@@ -61,11 +65,17 @@ function EditorBody(props: setterProps) {
     );
   }
 
-  function getAId(){
-    fetch("http://localhost:27415/api/status").then(a => {
+  async function getAiRewrites(){
+    fetch("http://localhost:27415/api/status", {
+      method: "POST",
+      body: JSON.stringify({package: packageText[0]}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(a => {
       a.json().then(b => {
-        setPackageText([packageText[0], b["message"], b["message"], b["message"]])
-        console.log( b["message"])
+        const data = JSON.parse(b["message"]);
+        setPackageText([packageText[0], data.V1, data.V2, data.V3])
       });
     })
   }
@@ -106,7 +116,7 @@ function EditorBody(props: setterProps) {
         doNothing()
       ) : (
         <ul className="char-data">
-          <li><button onClick={getAId}>Spice it up!</button></li>
+          <li><button onClick={getAiRewrites}>Spice it up!</button></li>
           <li>Used: {charactersUsed}</li>
           <li>Avaliable: {props.characterLimit - charactersUsed}</li>
         </ul>
