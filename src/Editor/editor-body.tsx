@@ -1,5 +1,8 @@
 import "./editor.css";
 import { useState } from "react";
+import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
+
+import 'react-tabs/style/react-tabs.css';
 
 interface setterProps {
   output_setter: React.Dispatch<React.SetStateAction<string>>;
@@ -20,11 +23,11 @@ function getTrueSize(str: string) {
 }
 
 function EditorBody(props: setterProps) {
-  const [packageText, setPackageText] = useState("");
+  const [packageText, setPackageText] = useState<string[]>(["","","",""]);
   let charactersUsed = 0;
 
   function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setPackageText(event.target.value);
+    setPackageText([event.target.value, packageText[1], packageText[2], packageText[3]]);
   }
 
   function createMarkupText(text: string) {
@@ -32,6 +35,10 @@ function EditorBody(props: setterProps) {
     let revision_text_b = "";
 
     charactersUsed = getTrueSize(text);
+
+    if (charactersUsed < 1){
+      return <p>Output...</p>
+    }
 
     for (var i = 0; i < text.length; i++)
       if (i < props.characterLimit)
@@ -53,10 +60,13 @@ function EditorBody(props: setterProps) {
       </>
     );
   }
-  
+
   function getAId(){
     fetch("http://localhost:27415/api/status").then(a => {
-      a.json().then(b => console.log( b["message"]));
+      a.json().then(b => {
+        setPackageText([packageText[0], b["message"], b["message"], b["message"]])
+        console.log( b["message"])
+      });
     })
   }
 
@@ -70,13 +80,33 @@ function EditorBody(props: setterProps) {
       />
 
       <div className="output editorBox">
-        {packageText.length > 0 ? createMarkupText(packageText) : "Output..."}
+        <Tabs defaultIndex={0}>
+          <TabList>
+            <Tab>Standard</Tab>
+            <Tab>AI V1</Tab>
+            <Tab>AI V2</Tab>
+            <Tab>AI V3</Tab>
+          </TabList>
+          <TabPanel>
+            {createMarkupText(packageText[0])}
+          </TabPanel>
+          <TabPanel>
+            {createMarkupText(packageText[1])}
+          </TabPanel>
+          <TabPanel>
+            {createMarkupText(packageText[2])}
+          </TabPanel>
+          <TabPanel>
+            {createMarkupText(packageText[3])}
+          </TabPanel>
+        </Tabs>
+        
       </div>
       {props.characterLimit == -1 ? (
         doNothing()
       ) : (
         <ul className="char-data">
-          <li><button onClick={getAId}>Spice up</button></li>
+          <li><button onClick={getAId}>Spice it up!</button></li>
           <li>Used: {charactersUsed}</li>
           <li>Avaliable: {props.characterLimit - charactersUsed}</li>
         </ul>
