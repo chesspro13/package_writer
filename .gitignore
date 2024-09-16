@@ -67,3 +67,5 @@ packages/react-devtools-timeline/dist
 
 package-lock.json
 yarn.lock
+
+.env

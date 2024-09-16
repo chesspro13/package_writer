@@ -2,6 +2,10 @@ import 'react-tabs/style/react-tabs.css';
 import "./editor.css";
 import { useState } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
+import axios from 'axios';
+import {config} from 'dotenv';
+
+config();
 
 interface setterProps {
   output_setter: React.Dispatch<React.SetStateAction<string>>;
@@ -65,19 +69,25 @@ function EditorBody(props: setterProps) {
     );
   }
 
-  async function getAiRewrites(){
-    fetch("http://localhost:27415/api/status", {
-      method: "POST",
-      body: JSON.stringify({package: packageText[0]}),
-      headers: {
-        'Content-Type': 'application/json'
+  async function axiosgetAiRewrites(){
+    const API_URL = process.env.API_URL;
+
+    if ( API_URL === undefined )
+      throw new Error("API UNDEFINED")
+
+    const source = axios.CancelToken.source();
+    const timeout = setTimeout(() => {
+      source.cancel()
+    }, 300000);
+    await axios.post( process.env.API_URL + "/api/status", 
+      { timeout: 300000, cancelToken: source.token, data: {package: packageText[0]}}
+    ).then(data => {
+
+        console.log(data)
+          // setPackageText([packageText[0], data["message"].V1, data["message"].V2, data["message"].V3])
+         clearTimeout( timeout)
       }
-    }).then(a => {
-      a.json().then(b => {
-        const data = JSON.parse(b["message"]);
-        setPackageText([packageText[0], data.V1, data.V2, data.V3])
-      });
-    })
+   )
   }
 
   return (
@@ -116,7 +126,7 @@ function EditorBody(props: setterProps) {
         doNothing()
       ) : (
         <ul className="char-data">
-          <li><button onClick={getAiRewrites}>Spice it up!</button></li>
+          <li><button onClick={axiosgetAiRewrites}>Spice it up!</button></li>
           <li>Used: {charactersUsed}</li>
           <li>Avaliable: {props.characterLimit - charactersUsed}</li>
         </ul>
