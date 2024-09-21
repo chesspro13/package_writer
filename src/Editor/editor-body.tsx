@@ -259,8 +259,8 @@ function EditorBody(props: setterProps) {
           <li>
             <button onClick={axiosgetAiRewrites}>Spice it up!</button>
           </li>
-          <li>Used: {charactersUsed}</li>
-          <li>Avaliable: {props.characterLimit - charactersUsed}</li>
+          <li>Used: {getTrueSize(packageText.input)}</li>
+          <li>Avaliable: {props.characterLimit - getTrueSize(packageText.input)}</li>
         </ul>
       )}
     </div>
