@@ -1,16 +1,32 @@
-import 'react-tabs/style/react-tabs.css';
+import "react-tabs/style/react-tabs.css";
 import "./editor.css";
 import { useState } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
-import axios from 'axios';
-import {config} from 'dotenv';
-
-config();
+import axios from "axios";
 
 interface setterProps {
   output_setter: React.Dispatch<React.SetStateAction<string>>;
   characterLimit: number;
 }
+
+type jsonFormat = {
+  input: string;
+  ai: {
+    response_1: {
+      revision: string;
+      feedback: string;
+    };
+    response_2: {
+      revision: string;
+      feedback: string;
+    };
+    response_3: {
+      revision: string;
+      feedback: string;
+    };
+    feedback: string;
+  };
+};
 
 function doNothing() {
   return <div></div>;
@@ -20,23 +36,96 @@ function getTrueSize(str: string) {
   let s = str.split(/\s/);
   let output = "";
   s.forEach((element) => {
-    if (element != "") output += element + " ";
+    if (element != "" && element != "\n") output += element + " ";
   });
   return output.trim().length;
 }
 
 function EditorBody(props: setterProps) {
-  const [packageText, setPackageText] = useState<string[]>(["","","",""]);
+  const [packageText, setPackageText] = useState<jsonFormat>(
+    setInput("", "", "", "")
+  );
   let charactersUsed = 0;
 
-  function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setPackageText([event.target.value, packageText[1], packageText[2], packageText[3]]);
+  function postParse(data: {
+    V1: string;
+    V2: string;
+    V3: string;
+    V1_Reason: string;
+    V2_Reason: string;
+    V3_Reason: string;
+    Feedback: string;
+  }) {
+    setPackageText({
+      input: packageText.input,
+      ai: {
+        response_1: {
+          revision: data.V1,
+          feedback: data.V1_Reason,
+        },
+        response_2: {
+          revision: data.V2,
+          feedback: data.V2_Reason,
+        },
+        response_3: {
+          revision: data.V3,
+          feedback: data.V3_Reason,
+        },
+        feedback: data.Feedback,
+      },
+    });
   }
 
-  function createMarkupText(text: string) {
+  function setInput(
+    input: string,
+    revision: string,
+    feedback_1: string,
+    feedback_2: string
+  ) {
+    return {
+      input: input,
+      ai: {
+        response_1: {
+          revision: revision,
+          feedback: feedback_1,
+        },
+        response_2: {
+          revision: revision,
+          feedback: feedback_1,
+        },
+        response_3: {
+          revision: revision,
+          feedback: feedback_1,
+        },
+        feedback: feedback_2,
+      },
+    };
+  }
 
-    if ( text === undefined ){
-      return <p>Output... </p>
+  function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setPackageText({
+      input: event.target.value,
+      ai: {
+        response_1: {
+          revision: packageText.ai.response_1.revision,
+          feedback: packageText.ai.response_1.feedback,
+        },
+        response_2: {
+          revision: packageText.ai.response_2.revision,
+          feedback: packageText.ai.response_2.feedback,
+        },
+        response_3: {
+          revision: packageText.ai.response_3.revision,
+          feedback: packageText.ai.response_3.feedback,
+        },
+        feedback: packageText.ai.feedback,
+      },
+    });
+  }
+
+  function createMarkupText(text: string, feedback: string, tracked: boolean) {
+    if (text === undefined) {
+      return <p>Output... </p>;
     }
 
     let revision_text_a = "";
@@ -44,8 +133,8 @@ function EditorBody(props: setterProps) {
 
     charactersUsed = getTrueSize(text);
 
-    if (charactersUsed < 1){
-      return <p>Output...</p>
+    if (charactersUsed < 1 && !tracked) {
+      return <p>Output...</p>;
     }
 
     for (var i = 0; i < text.length; i++)
@@ -62,32 +151,60 @@ function EditorBody(props: setterProps) {
         ) : (
           <>
             <span className="black">{revision_text_a}</span>
-            <span className="red">{revision_text_b}</span>{" "}
+            <span className="red">{revision_text_b}</span> <br />
+            <br />
+            <br />
+            <span>
+              <i>{feedback}</i>
+            </span>
           </>
         )}
       </>
     );
   }
 
-  async function axiosgetAiRewrites(){
+  async function axiosgetAiRewrites() {
     const API_URL = process.env.API_URL;
 
-    if ( API_URL === undefined )
-      throw new Error("API UNDEFINED")
+    if (API_URL === undefined) throw new Error("API UNDEFINED");
 
     const source = axios.CancelToken.source();
     const timeout = setTimeout(() => {
-      source.cancel()
+      setPackageText(
+        setInput(
+          packageText.input,
+          "Generation Failed.",
+          "",
+          "Generation Failed."
+        )
+      );
+      source.cancel();
     }, 300000);
-    await axios.post( process.env.API_URL + "/api/status", 
-      { timeout: 300000, cancelToken: source.token, data: {package: packageText[0]}}
-    ).then(data => {
+    setPackageText(
+      setInput(packageText.input, "Generating...", "", "Generating...")
+    );
 
-        console.log(data)
-          // setPackageText([packageText[0], data["message"].V1, data["message"].V2, data["message"].V3])
-         clearTimeout( timeout)
-      }
-   )
+    await axios
+      .post(API_URL + "/api/status", {
+        timeout: 300000,
+        cancelToken: source.token,
+        data: { package: packageText.input },
+      })
+      .then((response) => {
+        postParse(response.data.message);
+        clearTimeout(timeout);
+      })
+      .catch((reason) => {
+        console.log(reason);
+        setPackageText(
+          setInput(
+            packageText.input,
+            "Generation Failed.",
+            "",
+            "Generation Failed."
+          )
+        );
+      });
   }
 
   return (
@@ -106,27 +223,42 @@ function EditorBody(props: setterProps) {
             <Tab>AI V1</Tab>
             <Tab>AI V2</Tab>
             <Tab>AI V3</Tab>
+            <Tab>Feedback</Tab>
           </TabList>
+          <TabPanel>{createMarkupText(packageText.input, "", true)}</TabPanel>
           <TabPanel>
-            {createMarkupText(packageText[0])}
+            {createMarkupText(
+              packageText.ai.response_1.revision,
+              packageText.ai.response_1.feedback,
+              false
+            )}
           </TabPanel>
           <TabPanel>
-            {createMarkupText(packageText[1])}
+            {createMarkupText(
+              packageText.ai.response_2.revision,
+              packageText.ai.response_2.feedback,
+              false
+            )}
           </TabPanel>
           <TabPanel>
-            {createMarkupText(packageText[2])}
+            {createMarkupText(
+              packageText.ai.response_3.revision,
+              packageText.ai.response_3.feedback,
+              false
+            )}
           </TabPanel>
           <TabPanel>
-            {createMarkupText(packageText[3])}
+            <p>{packageText.ai.feedback}</p>
           </TabPanel>
         </Tabs>
-        
       </div>
       {props.characterLimit == -1 ? (
         doNothing()
       ) : (
         <ul className="char-data">
-          <li><button onClick={axiosgetAiRewrites}>Spice it up!</button></li>
+          <li>
+            <button onClick={axiosgetAiRewrites}>Spice it up!</button>
+          </li>
           <li>Used: {charactersUsed}</li>
           <li>Avaliable: {props.characterLimit - charactersUsed}</li>
         </ul>
