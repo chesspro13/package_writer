@@ -32,13 +32,17 @@ function doNothing() {
   return <div></div>;
 }
 
-function getTrueSize(str: string) {
+function cleanupText( str: string){
   let s = str.split(/\s/);
   let output = "";
   s.forEach((element) => {
-    if (element != "" && element != "\n") output += element + " ";
+    if (element.length != 0 ) output += element + " ";
   });
-  return output.trim().length;
+  return output.trim()
+}
+
+function getTrueSize(str: string) {
+  return cleanupText(str).length;
 }
 
 function EditorBody(props: setterProps) {
@@ -127,6 +131,8 @@ function EditorBody(props: setterProps) {
     if (text === undefined) {
       return <p>Output... </p>;
     }
+
+    text = cleanupText(text);
 
     let revision_text_a = "";
     let revision_text_b = "";
