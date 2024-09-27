@@ -1,8 +1,12 @@
 import "react-tabs/style/react-tabs.css";
 import "./editor.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
 import axios from "axios";
+
+
+const API_URL = "API";
+const PING_TIME = 2
 
 interface setterProps {
   output_setter: React.Dispatch<React.SetStateAction<string>>;
@@ -32,13 +36,13 @@ function doNothing() {
   return <div></div>;
 }
 
-function cleanupText( str: string){
+function cleanupText(str: string) {
   let s = str.split(/\s/);
   let output = "";
   s.forEach((element) => {
-    if (element.length != 0 ) output += element + " ";
+    if (element.length != 0) output += element + " ";
   });
-  return output.trim()
+  return output.trim();
 }
 
 function getTrueSize(str: string) {
@@ -49,6 +53,9 @@ function EditorBody(props: setterProps) {
   const [packageText, setPackageText] = useState<jsonFormat>(
     setInput("", "", "", "")
   );
+  const [jobInQueue, setJobInQueue] = useState(false);
+  const [jobID, setJobID] = useState<string | null>()
+  const [jobStatus, setJobStatus] = useState<string | null>();
   let charactersUsed = 0;
 
   function postParse(data: {
@@ -170,8 +177,6 @@ function EditorBody(props: setterProps) {
   }
 
   async function axiosgetAiRewrites() {
-    const API_URL = process.env.API_URL;
-
     if (API_URL === undefined) throw new Error("API UNDEFINED");
 
     const source = axios.CancelToken.source();
@@ -191,14 +196,85 @@ function EditorBody(props: setterProps) {
     );
 
     await axios
-      .post(API_URL + "/api/status", {
+      .post(API_URL + "/api/queue", {
         timeout: 300000,
         cancelToken: source.token,
         data: { package: packageText.input },
       })
       .then((response) => {
-        postParse(response.data.message);
-        clearTimeout(timeout);
+        if (response.status == 200) {
+          setJobInQueue(true);
+          setJobID(response.data.jobID)
+          // setJobStatus(response.data.status)
+          console.log("Job added to queue with ID: " + response.data.jobID);
+        } else
+          setPackageText(
+            setInput(
+              packageText.input,
+              "Generation Failed.",
+              "",
+              "Generation Failed."
+            )
+          );
+          clearTimeout(timeout);
+      })
+      .catch((reason) => {
+        console.log(reason);
+        setPackageText(
+          setInput(
+            packageText.input,
+            "Generation Failed.",
+            "",
+            "Generation Failed."
+          )
+        );
+      });
+  }
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (jobInQueue) {
+      interval = setInterval(() => {
+        getData();
+      }, PING_TIME * 1000); // Call API every X seconds to see if the job is done
+
+      return () => clearInterval(interval);
+    }
+
+    return () => {};
+
+  }, [jobInQueue]);
+
+  async function getData(){
+    console.log("Status of: " + jobID)
+    await axios
+      .post(API_URL + "/api/status/" + jobID, {
+        timeout: 300000,
+        // cancelToken: source.token,
+        data: { token: "NEED TO ADD VERIFICATION TOKENS!!!" }, // VERIFICATION TOKEN
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          console.log("Response data; " + response.data.status + " time left: " + response.data.timeRemaining)
+          if (response.data.status == "completed")
+          {
+            setJobInQueue(false);
+            setJobID(null)
+            setJobStatus(null)
+            postParse(JSON.parse(response.data.data));
+          }else{
+            setInput(packageText.input, "Generating...", "", "Generating...")
+          }
+        } else
+          setPackageText(
+            setInput(
+              packageText.input,
+              "Generation Failed.",
+              "",
+              "Generation Failed."
+            )
+          );
       })
       .catch((reason) => {
         console.log(reason);
@@ -266,7 +342,9 @@ function EditorBody(props: setterProps) {
             <button onClick={axiosgetAiRewrites}>Spice it up!</button>
           </li>
           <li>Used: {getTrueSize(packageText.input)}</li>
-          <li>Avaliable: {props.characterLimit - getTrueSize(packageText.input)}</li>
+          <li>
+            Avaliable: {props.characterLimit - getTrueSize(packageText.input)}
+          </li>
         </ul>
       )}
     </div>
