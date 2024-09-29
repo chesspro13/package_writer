@@ -199,7 +199,7 @@ function EditorBody(props: setterProps) {
       .post(API_URL + "/api/queue", {
         timeout: 300000,
         cancelToken: source.token,
-        data: { package: packageText.input },
+        data: { package: packageText.input, current_job: jobID },
       })
       .then((response) => {
         if (response.status == 200) {
@@ -244,7 +244,7 @@ function EditorBody(props: setterProps) {
 
     return () => {};
 
-  }, [jobInQueue]);
+  }, [jobInQueue, jobID]);
 
   async function getData(){
     console.log("Status of: " + jobID)
