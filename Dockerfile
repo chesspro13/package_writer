@@ -1,9 +1,14 @@
-FROM node:latest
+FROM node
+
 WORKDIR /package_writer
-COPY ./public/ /package_writer/public
-COPY ./src/ /package_writer/src/
-COPY ./package.json /package_writer/
+
+COPY . .
 
 RUN npm install
 
-CMD ["npm", "run"]
+RUN npm run build
+
+EXPOSE 5173
+
+CMD ["npm", "run", "host"]
+# CMD ["vite", "--host"]
