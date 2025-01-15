@@ -1,9 +1,17 @@
-FROM node:latest
-WORKDIR /package_writer
-COPY ./public/ /package_writer/public
-COPY ./src/ /package_writer/src/
-COPY ./package.json /package_writer/
+FROM node:18-alpine
 
-RUN npm install
+WORKDIR /app
 
-CMD ["npm", "run"]
+COPY package.json .
+
+RUN yarn install
+
+RUN npm i -g serve
+
+COPY . .
+
+RUN yarn run build
+
+EXPOSE 3000
+
+CMD [ "serve", "-s", "dist" ]
