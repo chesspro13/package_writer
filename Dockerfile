@@ -1,14 +1,17 @@
-FROM node
+FROM node:18-alpine
 
-WORKDIR /package_writer
+WORKDIR /app
+
+COPY package.json .
+
+RUN yarn install
+
+RUN npm i -g serve
 
 COPY . .
 
-RUN npm install
+RUN yarn run build
 
-RUN npm run build
+EXPOSE 3000
 
-EXPOSE 5173
-
-CMD ["npm", "run", "host"]
-# CMD ["vite", "--host"]
+CMD [ "serve", "-s", "dist" ]
