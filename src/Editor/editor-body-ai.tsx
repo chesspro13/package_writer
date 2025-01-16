@@ -55,7 +55,7 @@ function EditorBody(props: setterProps) {
   );
   const [jobInQueue, setJobInQueue] = useState(false);
   const [jobID, setJobID] = useState<string | null>()
-  const [jobStatus, setJobStatus] = useState<string | null>();
+  // const [jobStatus, setJobStatus] = useState<string | null>();
   let charactersUsed = 0;
 
   function postParse(data: {
@@ -261,7 +261,7 @@ function EditorBody(props: setterProps) {
           {
             setJobInQueue(false);
             setJobID(null)
-            setJobStatus(null)
+            // setJobStatus(null)
             postParse(JSON.parse(response.data.data));
           }else{
             setInput(packageText.input, "Generating...", "", "Generating...")
