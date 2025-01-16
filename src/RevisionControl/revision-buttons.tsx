@@ -8,16 +8,20 @@ interface setterProps {
 
 function RevisionButtons(props: setterProps) {
   function updateOutput() {
-    if (props.output == "") return;
+    let revisions: string[] = [ props.output ]
 
-    props.updateRevisions([
-      props.output,
-      ...props.revisions, // Put old items at the end
-    ]);
+    props.revisions.map( (item) => {
+      if ( item != "")
+        revisions.push(item)
+    });
+
+    props.updateRevisions( revisions );
+    localStorage.setItem("revisions", JSON.stringify(revisions))
   }
 
   function resetOutput() {
     props.updateRevisions([""]);
+    localStorage.removeItem("revisions");
   }
 
   return (

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
 import axios from "axios";
 
-
 const API_URL = "API";
 const PING_TIME = 2
 
@@ -43,6 +42,14 @@ function cleanupText(str: string) {
     if (element.length != 0) output += element + " ";
   });
   return output.trim();
+}
+
+function checkForSavedData(){
+  const data = localStorage.getItem("user-input");
+  if ( data )
+    return data;
+  else
+    return ""
 }
 
 function getTrueSize(str: string) {
@@ -132,6 +139,8 @@ function EditorBody(props: setterProps) {
         feedback: packageText.ai.feedback,
       },
     });
+
+    localStorage.setItem("user-input", event.target.value);
   }
 
   function createMarkupText(text: string, feedback: string, tracked: boolean) {
@@ -246,6 +255,10 @@ function EditorBody(props: setterProps) {
 
   }, [jobInQueue, jobID]);
 
+  useEffect(() => {
+    setPackageText( setInput(checkForSavedData(), "Output...", "Output...","Output...")) ;
+  }, []);
+
   async function getData(){
     console.log("Status of: " + jobID)
     await axios
@@ -296,7 +309,8 @@ function EditorBody(props: setterProps) {
         placeholder="Package data here..."
         wrap="hard"
         onChange={formatOutput}
-      />
+        value={ checkForSavedData() }
+      /> 
 
       <div className="output editorBox">
         <Tabs defaultIndex={0}>

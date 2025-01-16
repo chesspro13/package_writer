@@ -1,6 +1,6 @@
 import "react-tabs/style/react-tabs.css";
 import "./editor.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
 
 interface setterProps {
@@ -25,18 +25,31 @@ function getTrueSize(str: string) {
   return cleanupText(str).length;
 }
 
+function checkForSavedData(){
+    const data = localStorage.getItem("user-input");
+    if ( data )
+      return data;
+    else
+      return ""
+}
+
 function EditorBody(props: setterProps) {
   const [packageText, setPackageText] = useState("");
   let charactersUsed = 0;
 
   function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setPackageText(event.target.value);
+    localStorage.setItem("user-input", event.target.value);
   }
 
   function createMarkupText(text: string, feedback: string, tracked: boolean) {
     if (text === undefined) {
       return <p>Output... </p>;
     }
+
+    useEffect(() => {
+      setPackageText( checkForSavedData() );
+    }, []);
 
     text = cleanupText(text);
 
@@ -75,6 +88,29 @@ function EditorBody(props: setterProps) {
     );
   }
 
+
+
+  function feedbackText(text: string, feedback: string, tracked: boolean) {
+    if (text === undefined) {
+      return <p>Output... </p>;
+    }
+
+
+    return (
+      <>
+          <>
+            <span className="black">{text}</span>
+            <br />
+            <br />
+            <br />
+            <span>
+              <i>{feedback}</i>
+            </span>
+          </>
+      </>
+    );
+  }
+
   return (
     <div className="editor">
       <textarea
@@ -82,6 +118,7 @@ function EditorBody(props: setterProps) {
         placeholder="Package data here..."
         wrap="hard"
         onChange={formatOutput}
+        value={ checkForSavedData() }
       />
 
       <div className="output editorBox">
@@ -96,21 +133,21 @@ function EditorBody(props: setterProps) {
           <TabPanel>
             {createMarkupText(packageText, "", true)}</TabPanel>
           <TabPanel>
-            {createMarkupText(
+            {feedbackText(
               "Local version only",
               "For AI functionality, go to https://packagesmith.mauldin314.com",
               false
             )}
           </TabPanel>
           <TabPanel>
-            {createMarkupText(
+            {feedbackText(
               "Local version only",
               "For AI functionality, go to https://packagesmith.mauldin314.com",
               false
             )}
           </TabPanel>
           <TabPanel>
-            {createMarkupText(
+            {feedbackText(
               "Local version only",
               "For AI functionality, go to https://packagesmith.mauldin314.com",
               false

@@ -1,7 +1,9 @@
 import "./revision.css";
+import { useEffect } from "react";
 
 interface outputProp {
   revisions: string[];
+  updateRevisions: React.Dispatch<React.SetStateAction<string[]>>;
   characterLimit: number;
 }
 
@@ -48,6 +50,13 @@ function RevisionElement(props: outputProp) {
 
   function doNothing() {}
 
+  useEffect(() => {
+    const userData = localStorage.getItem("revisions");
+    var data = [];
+    if ( userData ){    
+      props.updateRevisions( JSON.parse(userData) );
+}}, []);
+  
   function drawList(revisions: string[]) {
     return revisions.map((output) => {
       return <>{output != "" ? createDiv(output) : doNothing()}</>;
@@ -63,7 +72,7 @@ function RevisionElement(props: outputProp) {
   return (
     <div className="revision_container">
       <ul className="revision_container">
-        {props.revisions.length > 1 ? drawList(props.revisions) : drawEmpty()}
+        {props.revisions.length > 0 ? drawList(props.revisions) : drawEmpty()}
       </ul>
     </div>
   );

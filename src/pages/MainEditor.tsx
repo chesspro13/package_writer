@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RevisionButtons from "../RevisionControl/revision-buttons";
 import EditorBody from "../Editor/editor-body-local";
 import RevisionElement from "../RevisionControl/RevisionElement";
@@ -25,6 +25,7 @@ function MainEditor() {
         />
         <RevisionElement
           revisions={revisions}
+          updateRevisions={setRevisions}
           characterLimit={characterLimit}
         />
         <Footer />
