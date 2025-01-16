@@ -90,7 +90,7 @@ function EditorBody(props: setterProps) {
 
 
 
-  function feedbackText(text: string, feedback: string, tracked: boolean) {
+  function feedbackText(text: string, feedback: string) {
     if (text === undefined) {
       return <p>Output... </p>;
     }
@@ -135,22 +135,19 @@ function EditorBody(props: setterProps) {
           <TabPanel>
             {feedbackText(
               "Local version only",
-              "For AI functionality, go to https://packagesmith.mauldin314.com",
-              false
+              "For AI functionality, go to https://packagesmith.mauldin314.com"
             )}
           </TabPanel>
           <TabPanel>
             {feedbackText(
               "Local version only",
-              "For AI functionality, go to https://packagesmith.mauldin314.com",
-              false
+              "For AI functionality, go to https://packagesmith.mauldin314.com"
             )}
           </TabPanel>
           <TabPanel>
             {feedbackText(
               "Local version only",
-              "For AI functionality, go to https://packagesmith.mauldin314.com",
-              false
+              "For AI functionality, go to https://packagesmith.mauldin314.com"
             )}
           </TabPanel>
           <TabPanel>

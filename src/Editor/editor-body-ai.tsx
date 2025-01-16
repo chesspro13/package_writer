@@ -302,6 +302,28 @@ function EditorBody(props: setterProps) {
       });
   }
 
+
+  function feedbackText(text: string, feedback: string) {
+    if (text === undefined) {
+      return <p>Output... </p>;
+    }
+
+
+    return (
+      <>
+          <>
+            <span className="black">{text}</span>
+            <br />
+            <br />
+            <br />
+            <span>
+              <i>{feedback}</i>
+            </span>
+          </>
+      </>
+    );
+  }
+
   return (
     <div className="editor">
       <textarea
@@ -323,24 +345,21 @@ function EditorBody(props: setterProps) {
           </TabList>
           <TabPanel>{createMarkupText(packageText.input, "", true)}</TabPanel>
           <TabPanel>
-            {createMarkupText(
+            {feedbackText(
               packageText.ai.response_1.revision,
               packageText.ai.response_1.feedback,
-              false
             )}
           </TabPanel>
           <TabPanel>
-            {createMarkupText(
+            {feedbackText(
               packageText.ai.response_2.revision,
               packageText.ai.response_2.feedback,
-              false
             )}
           </TabPanel>
           <TabPanel>
-            {createMarkupText(
+            {feedbackText(
               packageText.ai.response_3.revision,
               packageText.ai.response_3.feedback,
-              false
             )}
           </TabPanel>
           <TabPanel>

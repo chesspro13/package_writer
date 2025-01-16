@@ -70,10 +70,6 @@ function RevisionElement(props: outputProp) {
     </ul>
   }
 
-  function drawEmpty() {
-    return <div className="empty">No revisions to display</div>;
-  }
-
   if (props.revisions.length == 0) return <p>No data</p>;
 
   return (

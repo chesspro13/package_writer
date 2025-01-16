@@ -25,6 +25,7 @@ function MainEditor() {
         />
         <RevisionElement
           revisions={revisions}
+          updateRevisions={setRevisions}
           characterLimit={characterLimit}
         />
         <Footer />
