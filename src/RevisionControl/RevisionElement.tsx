@@ -36,31 +36,38 @@ function RevisionElement(props: outputProp) {
     return output.trim().length;
   }
 
-  function createDiv(output: string) {
+  function createDiv(output: string, key: number) {
     return (
-      <div className="revision">
+      <li className="revision" key={key}>
         <div>{createMarkupText(output)}</div>
         <ul className="revision_character_list">
-          <li>Used: {getTrueSize(output)}</li>
-          <li>Left: {props.characterLimit - getTrueSize(output)}</li>
+          <li key="used">Used: {getTrueSize(output)}</li>
+          <li key="left">Left: {props.characterLimit - getTrueSize(output)}</li>
         </ul>
-      </div>
+      </li>
     );
   }
 
-  function doNothing() {}
 
   useEffect(() => {
     const userData = localStorage.getItem("revisions");
-    var data = [];
     if ( userData ){    
       props.updateRevisions( JSON.parse(userData) );
 }}, []);
   
-  function drawList(revisions: string[]) {
-    return revisions.map((output) => {
-      return <>{output != "" ? createDiv(output) : doNothing()}</>;
-    });
+  function drawList() {
+    let key: number = 0;
+
+    if( props.revisions.length == 0 )
+      return;
+
+    return <ul className="revision_container" key={"list"} >
+      { 
+        props.revisions.map((output) => {
+          return output != "" ? createDiv(output, key++) : <li style={{ listStyleType: 'none' }} key={"None"}></li>;
+        })
+      }
+    </ul>
   }
 
   function drawEmpty() {
@@ -71,9 +78,7 @@ function RevisionElement(props: outputProp) {
 
   return (
     <div className="revision_container">
-      <ul className="revision_container">
-        {props.revisions.length > 0 ? drawList(props.revisions) : drawEmpty()}
-      </ul>
+      { drawList() }
     </div>
   );
 }
