@@ -1,6 +1,6 @@
 import { useState } from "react";
 import RevisionButtons from "../RevisionControl/revision-buttons";
-import EditorBody from "../Editor/editor-body-local";
+import EditorBody from "../Editor/editor-body-ai";
 import RevisionElement from "../RevisionControl/RevisionElement";
 import NavigationBar from "../Components/Header/NavigationBar";
 import Footer from "../Components/Footer/footer";

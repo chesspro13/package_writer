@@ -66,28 +66,34 @@ function EditorBody(props: setterProps) {
   let charactersUsed = 0;
 
   function postParse(data: {
-    V1: string;
-    V2: string;
-    V3: string;
-    V1_Reason: string;
-    V2_Reason: string;
-    V3_Reason: string;
+    V1: {
+      new_statement: string;
+      reasoning: string;
+    },
+    V2: {
+      new_statement: string;
+      reasoning: string;
+    },
+    V3: {
+      new_statement: string;
+      reasoning: string;
+    },
     Feedback: string;
   }) {
     setPackageText({
       input: packageText.input,
       ai: {
         response_1: {
-          revision: data.V1,
-          feedback: data.V1_Reason,
+          revision: data.V1.new_statement,
+          feedback: data.V1.reasoning,
         },
         response_2: {
-          revision: data.V2,
-          feedback: data.V2_Reason,
+          revision: data.V2.new_statement,
+          feedback: data.V2.reasoning,
         },
         response_3: {
-          revision: data.V3,
-          feedback: data.V3_Reason,
+          revision: data.V3.new_statement,
+          feedback: data.V3.reasoning,
         },
         feedback: data.Feedback,
       },
@@ -260,22 +266,20 @@ function EditorBody(props: setterProps) {
   }, []);
 
   async function getData(){
-    console.log("Status of: " + jobID)
     await axios
-      .post(API_URL + "/api/status/" + jobID, {
+      .get(API_URL + "/api/status/" + jobID, {
         timeout: 300000,
         // cancelToken: source.token,
         data: { token: "NEED TO ADD VERIFICATION TOKENS!!!" }, // VERIFICATION TOKEN
       })
       .then((response) => {
+
         if (response.status == 200) {
-          console.log("Response data; " + response.data.status + " time left: " + response.data.timeRemaining)
           if (response.data.status == "completed")
           {
             setJobInQueue(false);
             setJobID(null)
-            // setJobStatus(null)
-            postParse(JSON.parse(response.data.data));
+            postParse(JSON.parse(response.data.data.trim()));
           }else{
             setInput(packageText.input, "Generating...", "", "Generating...")
           }
