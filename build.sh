@@ -1,4 +1,4 @@
-VERSION="0.1.5"
+VERSION="0.1.7"
 
 # Move file around to build for AI
 cp ./src/pages/MainEditor.tsx.ai-ver ./src/pages/MainEditor.tsx
