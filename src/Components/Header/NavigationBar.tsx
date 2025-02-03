@@ -1,6 +1,7 @@
 import Navbar from "react-bootstrap/Navbar";
 import "./NavigationBar.css";
 import { NavLink } from "react-router-dom";
+import logo from "../../assets/packagesmith-inverted.png"
 
 interface navInterface {
   setCharacterLimit: React.Dispatch<React.SetStateAction<number>>;
@@ -36,7 +37,7 @@ function NavigationBar(props: navInterface) {
       <Navbar sticky="top" id="header">
         <h1>
           <NavLink to="/" className={"navigation_button"}>
-            Package Writer{" "}
+            Package Smith{" "}<img src={logo} style={{ width: 123, height: 60 }}/>
           </NavLink>
         </h1>
         <NavLink to="/about" className={"sub-important navigation_button"}>

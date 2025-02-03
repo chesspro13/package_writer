@@ -6,12 +6,14 @@ COPY . .
 
 RUN yarn install
 
+ARG VITE_VERSION
+ARG VITE_API
+ARG VITE_PING_DELAY
+ARG VITE_AI_URL
+ARG VITE_MODE
+
 RUN yarn run build
-# RUN npm i -g serve
 
+EXPOSE 8086
 
-
-# EXPOSE 3000
-
-# CMD [ "serve", "-s", "dist" ]
 CMD [ "yarn", "run", "preview"]
