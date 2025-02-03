@@ -1,7 +1,9 @@
 import "./revision.css";
+import { useEffect } from "react";
 
 interface outputProp {
   revisions: string[];
+  updateRevisions: React.Dispatch<React.SetStateAction<string[]>>;
   characterLimit: number;
 }
 
@@ -34,37 +36,45 @@ function RevisionElement(props: outputProp) {
     return output.trim().length;
   }
 
-  function createDiv(output: string) {
+  function createDiv(output: string, key: number) {
     return (
-      <div className="revision">
+      <li className="revision" key={key}>
         <div>{createMarkupText(output)}</div>
         <ul className="revision_character_list">
-          <li>Used: {getTrueSize(output)}</li>
-          <li>Left: {props.characterLimit - getTrueSize(output)}</li>
+          <li key="used">Used: {getTrueSize(output)}</li>
+          <li key="left">Left: {props.characterLimit - getTrueSize(output)}</li>
         </ul>
-      </div>
+      </li>
     );
   }
 
-  function doNothing() {}
 
-  function drawList(revisions: string[]) {
-    return revisions.map((output) => {
-      return <>{output != "" ? createDiv(output) : doNothing()}</>;
-    });
-  }
+  useEffect(() => {
+    const userData = localStorage.getItem("revisions");
+    if ( userData ){    
+      props.updateRevisions( JSON.parse(userData) );
+}}, []);
+  
+  function drawList() {
+    let key: number = 0;
 
-  function drawEmpty() {
-    return <div className="empty">No revisions to display</div>;
+    if( props.revisions.length == 0 )
+      return;
+
+    return <ul className="revision_container" key={"list"} >
+      { 
+        props.revisions.map((output) => {
+          return output != "" ? createDiv(output, key++) : <li style={{ listStyleType: 'none' }} key={"None"}></li>;
+        })
+      }
+    </ul>
   }
 
   if (props.revisions.length == 0) return <p>No data</p>;
 
   return (
     <div className="revision_container">
-      <ul className="revision_container">
-        {props.revisions.length > 1 ? drawList(props.revisions) : drawEmpty()}
-      </ul>
+      { drawList() }
     </div>
   );
 }

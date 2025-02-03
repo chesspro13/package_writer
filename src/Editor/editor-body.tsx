@@ -2,300 +2,96 @@ import "react-tabs/style/react-tabs.css";
 import "./editor.css";
 import { useEffect, useState } from "react";
 import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
-import axios from "axios";
+import { getTrueSize, checkForSavedData, doNothing, createMarkupText, getTabComponents, updateJson, getFeedbackTabComponents, axiosGetPromptedAiRewrites } from "./editor-components"
+import { getData, checkForSavedPrompt, axiosgetAiRewrites } from "./editor-components";
+import { setInput, } from "./editor-components";
+import { setterProps, jsonFormat } from "./definitions";
 
-
-const API_URL = "API";
-const PING_TIME = 2
-
-interface setterProps {
-  output_setter: React.Dispatch<React.SetStateAction<string>>;
-  characterLimit: number;
-}
-
-type jsonFormat = {
-  input: string;
-  ai: {
-    response_1: {
-      revision: string;
-      feedback: string;
-    };
-    response_2: {
-      revision: string;
-      feedback: string;
-    };
-    response_3: {
-      revision: string;
-      feedback: string;
-    };
-    feedback: string;
-  };
-};
-
-function doNothing() {
-  return <div></div>;
-}
-
-function cleanupText(str: string) {
-  let s = str.split(/\s/);
-  let output = "";
-  s.forEach((element) => {
-    if (element.length != 0) output += element + " ";
-  });
-  return output.trim();
-}
-
-function getTrueSize(str: string) {
-  return cleanupText(str).length;
-}
+const mode = import.meta.env.VITE_MODE;
 
 function EditorBody(props: setterProps) {
   const [packageText, setPackageText] = useState<jsonFormat>(
     setInput("", "", "", "")
   );
   const [jobInQueue, setJobInQueue] = useState(false);
-  const [jobID, setJobID] = useState<string | null>()
-  const [jobStatus, setJobStatus] = useState<string | null>();
-  let charactersUsed = 0;
+  const [jobID, setJobID] = useState<string | null>();
+  const [prompt, setPrompt] = useState("");
 
-  function postParse(data: {
-    V1: string;
-    V2: string;
-    V3: string;
-    V1_Reason: string;
-    V2_Reason: string;
-    V3_Reason: string;
-    Feedback: string;
-  }) {
-    setPackageText({
-      input: packageText.input,
-      ai: {
-        response_1: {
-          revision: data.V1,
-          feedback: data.V1_Reason,
-        },
-        response_2: {
-          revision: data.V2,
-          feedback: data.V2_Reason,
-        },
-        response_3: {
-          revision: data.V3,
-          feedback: data.V3_Reason,
-        },
-        feedback: data.Feedback,
-      },
-    });
-  }
 
-  function setInput(
-    input: string,
-    revision: string,
-    feedback_1: string,
-    feedback_2: string
-  ) {
-    return {
-      input: input,
-      ai: {
-        response_1: {
-          revision: revision,
-          feedback: feedback_1,
-        },
-        response_2: {
-          revision: revision,
-          feedback: feedback_1,
-        },
-        response_3: {
-          revision: revision,
-          feedback: feedback_1,
-        },
-        feedback: feedback_2,
-      },
-    };
-  }
-
-  function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setPackageText({
-      input: event.target.value,
-      ai: {
-        response_1: {
-          revision: packageText.ai.response_1.revision,
-          feedback: packageText.ai.response_1.feedback,
-        },
-        response_2: {
-          revision: packageText.ai.response_2.revision,
-          feedback: packageText.ai.response_2.feedback,
-        },
-        response_3: {
-          revision: packageText.ai.response_3.revision,
-          feedback: packageText.ai.response_3.feedback,
-        },
-        feedback: packageText.ai.feedback,
-      },
-    });
-  }
-
-  function createMarkupText(text: string, feedback: string, tracked: boolean) {
-    if (text === undefined) {
-      return <p>Output... </p>;
-    }
-
-    text = cleanupText(text);
-
-    let revision_text_a = "";
-    let revision_text_b = "";
-
-    charactersUsed = getTrueSize(text);
-
-    if (charactersUsed < 1 && !tracked) {
-      return <p>Output...</p>;
-    }
-
-    for (var i = 0; i < text.length; i++)
-      if (i < props.characterLimit)
-        revision_text_a = revision_text_a.concat(text[i]);
-      else revision_text_b = revision_text_b.concat(text[i]);
-
-    props.output_setter(text);
-
-    return (
-      <>
-        {props.characterLimit == -1 ? (
-          <span className="black">{text}</span>
-        ) : (
-          <>
-            <span className="black">{revision_text_a}</span>
-            <span className="red">{revision_text_b}</span> <br />
-            <br />
-            <br />
-            <span>
-              <i>{feedback}</i>
-            </span>
-          </>
-        )}
-      </>
-    );
-  }
-
-  async function axiosgetAiRewrites() {
-    if (API_URL === undefined) throw new Error("API UNDEFINED");
-
-    const source = axios.CancelToken.source();
-    const timeout = setTimeout(() => {
-      setPackageText(
-        setInput(
-          packageText.input,
-          "Generation Failed.",
-          "",
-          "Generation Failed."
-        )
-      );
-      source.cancel();
-    }, 300000);
-    setPackageText(
-      setInput(packageText.input, "Generating...", "", "Generating...")
-    );
-
-    await axios
-      .post(API_URL + "/api/queue", {
-        timeout: 300000,
-        cancelToken: source.token,
-        data: { package: packageText.input, current_job: jobID },
-      })
-      .then((response) => {
-        if (response.status == 200) {
-          setJobInQueue(true);
-          setJobID(response.data.jobID)
-          // setJobStatus(response.data.status)
-          console.log("Job added to queue with ID: " + response.data.jobID);
-        } else
-          setPackageText(
-            setInput(
-              packageText.input,
-              "Generation Failed.",
-              "",
-              "Generation Failed."
-            )
-          );
-          clearTimeout(timeout);
-      })
-      .catch((reason) => {
-        console.log(reason);
-        setPackageText(
-          setInput(
-            packageText.input,
-            "Generation Failed.",
-            "",
-            "Generation Failed."
-          )
-        );
-      });
-  }
-
+  /**
+ * Handles loading data from storage on a new session
+ */
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    setPackageText(setInput(checkForSavedData(), "", "", ""));
+    if (mode == "prompt")
+      setPrompt(checkForSavedPrompt());
+  }, []);
 
-    if (jobInQueue) {
-      interval = setInterval(() => {
-        getData();
-      }, PING_TIME * 1000); // Call API every X seconds to see if the job is done
 
-      return () => clearInterval(interval);
+  /**
+ * Used by AI enabled modes to periodically ping the server for updates to the job
+ */
+  if (mode == "ai" || mode == "prompt")
+    useEffect(() => {
+      let interval: NodeJS.Timeout;
+      const delay = (process.env.REACT_APP_PING_DELAY === undefined ? 1 :
+        parseInt(process.env.REACT_APP_PING_DELAY));
+
+      if (jobInQueue) {
+        interval = setInterval(() => {
+          getData(packageText, setPackageText, setJobInQueue, jobID, setJobID);
+        }, delay * 1000); // Call API every X seconds to see if the job is done
+
+        return () => clearInterval(interval);
+      }
+      return () => { };
+    }, [jobInQueue, jobID]);
+
+
+
+
+    function updatePrompt(event: React.ChangeEvent<HTMLTextAreaElement>) {
+      setPrompt( event.target.value );
+      localStorage.setItem("user-prompt", event.target.value);
     }
 
-    return () => {};
+  /**
+ * Handles the change event of a textarea, updates the package text state,
+ * and saves the user input to local storage.
+ *
+ * @param {React.ChangeEvent<HTMLTextAreaElement>} event - The change event triggered by the textarea.
+ */
+  function formatOutput(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setPackageText(updateJson(packageText, event));
+    localStorage.setItem("user-input", event.target.value);
+  }
 
-  }, [jobInQueue, jobID]);
-
-  async function getData(){
-    console.log("Status of: " + jobID)
-    await axios
-      .post(API_URL + "/api/status/" + jobID, {
-        timeout: 300000,
-        // cancelToken: source.token,
-        data: { token: "NEED TO ADD VERIFICATION TOKENS!!!" }, // VERIFICATION TOKEN
-      })
-      .then((response) => {
-        if (response.status == 200) {
-          console.log("Response data; " + response.data.status + " time left: " + response.data.timeRemaining)
-          if (response.data.status == "completed")
-          {
-            setJobInQueue(false);
-            setJobID(null)
-            setJobStatus(null)
-            postParse(JSON.parse(response.data.data));
-          }else{
-            setInput(packageText.input, "Generating...", "", "Generating...")
-          }
-        } else
-          setPackageText(
-            setInput(
-              packageText.input,
-              "Generation Failed.",
-              "",
-              "Generation Failed."
-            )
-          );
-      })
-      .catch((reason) => {
-        console.log(reason);
-        setPackageText(
-          setInput(
-            packageText.input,
-            "Generation Failed.",
-            "",
-            "Generation Failed."
-          )
-        );
-      });
+  /**
+ * Calls the api to get a rewrite
+ */
+  function aiReWrites(): void {
+    if ( mode === "ai")
+      axiosgetAiRewrites(packageText, setPackageText, setJobInQueue, jobID, setJobID);
+    else if ( mode === "prompt")
+      axiosGetPromptedAiRewrites(packageText, setPackageText, setJobInQueue, jobID, setJobID, prompt);
   }
 
   return (
     <div className="editor">
+      {mode === "prompt" ?
+        <textarea
+          className="input editorBox"
+          placeholder="prompt here..."
+          wrap="hard"
+          onChange={updatePrompt}
+          value={checkForSavedPrompt()}
+        /> : doNothing()}
       <textarea
         className="input editorBox"
         placeholder="Package data here..."
         wrap="hard"
         onChange={formatOutput}
+        value={checkForSavedData()}
       />
 
       <div className="output editorBox">
@@ -307,31 +103,13 @@ function EditorBody(props: setterProps) {
             <Tab>AI V3</Tab>
             <Tab>Feedback</Tab>
           </TabList>
-          <TabPanel>{createMarkupText(packageText.input, "", true)}</TabPanel>
           <TabPanel>
-            {createMarkupText(
-              packageText.ai.response_1.revision,
-              packageText.ai.response_1.feedback,
-              false
-            )}
+            {createMarkupText(packageText.input, "", true, props.characterLimit, props.output_setter)}
           </TabPanel>
-          <TabPanel>
-            {createMarkupText(
-              packageText.ai.response_2.revision,
-              packageText.ai.response_2.feedback,
-              false
-            )}
-          </TabPanel>
-          <TabPanel>
-            {createMarkupText(
-              packageText.ai.response_3.revision,
-              packageText.ai.response_3.feedback,
-              false
-            )}
-          </TabPanel>
-          <TabPanel>
-            <p>{packageText.ai.feedback}</p>
-          </TabPanel>
+          {getTabComponents(packageText.ai.response_1.revision, packageText.ai.response_1.feedback)}
+          {getTabComponents(packageText.ai.response_2.revision, packageText.ai.response_2.feedback)}
+          {getTabComponents(packageText.ai.response_3.revision, packageText.ai.response_3.feedback)}
+          {getFeedbackTabComponents(packageText)}
         </Tabs>
       </div>
       {props.characterLimit == -1 ? (
@@ -339,7 +117,16 @@ function EditorBody(props: setterProps) {
       ) : (
         <ul className="char-data">
           <li>
-            <button onClick={axiosgetAiRewrites}>Spice it up!</button>
+            {(() => {
+              switch (mode) {
+                case "prompt":
+                case "ai":
+                  return <button disabled={false} onClick={aiReWrites}>Spice it up!</button>;
+                case "local":
+                default:
+                  return <button disabled={true}>Spice it up!</button>
+              }
+            })()}
           </li>
           <li>Used: {getTrueSize(packageText.input)}</li>
           <li>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import RevisionButtons from "../RevisionControl/revision-buttons";
-import EditorBody from "../Editor/editor-body";
+import Editor from "../Editor/editor-body";
 import RevisionElement from "../RevisionControl/RevisionElement";
 import NavigationBar from "../Components/Header/NavigationBar";
 import Footer from "../Components/Footer/footer";
@@ -17,7 +17,8 @@ function MainEditor() {
         showCharacters={true}
       />
       <div className="body">
-        <EditorBody output_setter={setOutput} characterLimit={characterLimit} />
+        <Editor output_setter={setOutput} characterLimit={characterLimit} />
+
         <RevisionButtons
           revisions={revisions}
           updateRevisions={setRevisions}
@@ -25,6 +26,7 @@ function MainEditor() {
         />
         <RevisionElement
           revisions={revisions}
+          updateRevisions={setRevisions}
           characterLimit={characterLimit}
         />
         <Footer />

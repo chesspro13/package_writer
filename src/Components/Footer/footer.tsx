@@ -4,7 +4,7 @@ import "./footer.css";
 function Footer() {
   return (
     <footer>
-      Version 0.1.4
+      { import.meta.env.VITE_VERSION }
       {/* <Coffee /> */}
     </footer>
   );
