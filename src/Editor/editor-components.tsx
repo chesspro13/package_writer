@@ -208,7 +208,7 @@ export async function axiosgetAiRewrites(packageText: jsonFormat, setPackageText
   );
 
   await axios
-    .post(import.meta.env.VITE_API + "/api/queue", {
+    .post(import.meta.env.VITE_API + "/queue", {
       timeout: 300000,
       cancelToken: source.token,
       data: { package: packageText.input, current_job: jobID },
@@ -263,7 +263,7 @@ export async function axiosGetPromptedAiRewrites(packageText: jsonFormat, setPac
   
 
   await axios
-    .post(api + "/api/prompt-queue", {
+    .post(api + "/prompt-queue", {
       timeout: 300000,
       cancelToken: source.token,
       data: { package: packageText.input, current_job: jobID, prompt: prompt },
@@ -348,10 +348,10 @@ export
 export async function getData(packageText: jsonFormat, setPackageText: React.Dispatch<React.SetStateAction<jsonFormat>>, setJobInQueue: React.Dispatch<React.SetStateAction<boolean>>,
   jobID: string | null | undefined, setJobID: React.Dispatch<React.SetStateAction<string | null | undefined>>) {
   await axios
-    .get(import.meta.env.VITE_API + "/api/status/" + jobID, {
+    .get(import.meta.env.VITE_API + "/status/" + jobID, {
       timeout: 300000,
       // cancelToken: source.token,
-      data: { token: "NEED TO ADD VERIFICATION TOKENS!!!" }, // VERIFICATION TOKEN
+      // data: { token: "NEED TO ADD VERIFICATION TOKENS!!!" }, // VERIFICATION TOKEN
     })
     .then((response) => {
 

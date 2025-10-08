@@ -34,8 +34,8 @@ function EditorBody(props: setterProps) {
   if (mode == "ai" || mode == "prompt")
     useEffect(() => {
       let interval: NodeJS.Timeout;
-      const delay = (process.env.REACT_APP_PING_DELAY === undefined ? 1 :
-        parseInt(process.env.REACT_APP_PING_DELAY));
+      const delay = (import.meta.env.VITE_APP_PING_DELAY === undefined ? 1 :
+        parseInt(import.meta.env.VITE_APP_PING_DELAY));
 
       if (jobInQueue) {
         interval = setInterval(() => {
