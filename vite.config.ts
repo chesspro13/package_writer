@@ -14,6 +14,7 @@ export default defineConfig({
    strictPort: true,
    host: true,
    origin: "http://0.0.0.0:8086",
+   allowedHosts: ["pop-os.local", "app", "pop-os.localhost"],
   },
   optimizeDeps: {
     disabled: false
